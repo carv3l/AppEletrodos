@@ -115,7 +115,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
                     <EditText
-                        android:id="@+id/amountToConvertValueEditText"
+                        android:id="@+id/EditTextMedida"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
@@ -145,7 +145,7 @@
 
 
                 <Button
-                    android:id="@+id/conversionButton"
+                    android:id="@+id/calculateButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
