@@ -1,5 +1,7 @@
 package com.example.eletrodos;
 
+import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -8,6 +10,7 @@ import com.google.android.material.snackbar.Snackbar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
+import androidx.navigation.fragment.NavHostFragment;
 
 import android.view.View;
 
@@ -42,7 +45,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+
                 showToast("Home Clicked");
+
+                Intent myIntent = new Intent(MainActivity.this, CalcularActivity.class);
+                //  myIntent.putExtra("key", value); //Optional parameters
+                MainActivity.this.startActivity(myIntent);
 
             }
         });
@@ -50,6 +58,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 showToast("Chat Clicked");
+
+
+
 
             }
         });
