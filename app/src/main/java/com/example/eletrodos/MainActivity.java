@@ -4,21 +4,37 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleObserver;
+import androidx.lifecycle.OnLifecycleEvent;
+import androidx.lifecycle.ProcessLifecycleOwner;
 import androidx.navigation.fragment.NavHostFragment;
 
+import android.util.Log;
 import android.view.View;
 
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity {
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+
+public class MainActivity extends AppCompatActivity implements LifecycleObserver {
 
     CardView cardHome;
     CardView cardChat;
@@ -31,6 +47,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        ProcessLifecycleOwner.get().getLifecycle().addObserver(this);
+
+
+
 
 
 
@@ -100,6 +121,57 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
+///DECTECTAR SE APP ESTÁ ABERTA OU NÃO
+
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
+    private void onAppBackgrounded() {
+        Log.d("MyApp", "App in background");
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_START)
+    private void onAppForegrounded() {
+
+        Log.d("MyApp", "App in foreground");
+        wakeupApp();
+    }
+
+
+
+
+    private void wakeupApp(){
+
+        RequestQueue queue = Volley.newRequestQueue(this);
+        String serverApi ="https://eletrodos.herokuapp.com/api/";
+
+        JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, serverApi, null,new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response){
+                String data = "";
+                try {
+                    data = response.getString("status");
+                    // Toast.makeText(CalcularActivity.this, "Response"+ response.getJSONObject("data"), Toast.LENGTH_LONG).show();
+                     Log.e("MyApp","Response é: "+response.getString("status"));
+                    //Log.e(TAG,"Response"+response);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Log.e("MyApp","Err "+e);
+                }
+
+
+            }
+        },new Response.ErrorListener() { //Create an error listener to handle errors appropriately.
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                //This code is executed if there is an error.
+                Toast.makeText(MainActivity.this, "Erro"+ error, Toast.LENGTH_LONG).show();
+            }
+        }
+        );
+        queue.add(getRequest);
+
+
+    }
 
 
 
