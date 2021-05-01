@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
 
 
-                showToast("Home Clicked");
+                //showToast("Home Clicked");
 
                 Intent myIntent = new Intent(MainActivity.this, CalcularActivity.class);
                 //  myIntent.putExtra("key", value); //Optional parameters

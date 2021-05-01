@@ -1,5 +1,6 @@
 package com.example.eletrodos;
 
+import android.content.Context;
 import android.nfc.Tag;
 import android.os.Bundle;
 
@@ -18,8 +19,10 @@ import androidx.cardview.widget.CardView;
 
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,6 +42,7 @@ public class CalcularActivity extends AppCompatActivity {
     EditText rmedido;
     private static final String TAG = "MyActivity";
     CardView cardViewresult;
+    LinearLayout mainLayout;
 
     TextView TextViewResult;
 
@@ -56,6 +60,9 @@ public class CalcularActivity extends AppCompatActivity {
 
         TextViewResult = (TextView)findViewById(R.id.TextViewResult);
 
+        mainLayout = (LinearLayout)findViewById(R.id.LinearLayoutMain);
+
+
         calculate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -65,6 +72,9 @@ public class CalcularActivity extends AppCompatActivity {
 
 
                 PostCalculate(spacing_value, measure_value);
+
+                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(mainLayout.getWindowToken(), 0);
 
 
 
