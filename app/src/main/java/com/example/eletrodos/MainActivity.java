@@ -27,6 +27,7 @@ import android.view.View;
 
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -42,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements LifecycleObserver
     CardView cardWidget;
     CardView cardSettings;
     CardView cardLogout;
+    TextView txUsername;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements LifecycleObserver
         cardWidget = findViewById(R.id.cardWidgets);
         cardSettings = findViewById(R.id.cardSettings);
         cardLogout = findViewById(R.id.cardLogout);
+        txUsername = (TextView)findViewById(R.id.textViewUserName);
 
         cardHome.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,7 +93,10 @@ public class MainActivity extends AppCompatActivity implements LifecycleObserver
         cardProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showToast("Profile Clicked");
+                Intent myIntent = new Intent(MainActivity.this, LoginActivity.class);
+                //  myIntent.putExtra("key", value); //Optional parameters
+                MainActivity.this.startActivityForResult(myIntent, 0);
+             //   showToast("Profile Clicked");
 
             }
         });
@@ -118,6 +124,25 @@ public class MainActivity extends AppCompatActivity implements LifecycleObserver
         });
 
     }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 0) {
+            if(resultCode == LoginActivity.RESULT_OK){
+                String result= data.getStringExtra("result");
+                //showToast("DONO É: "+ result);
+                txUsername.setText(result);
+            }
+            if (resultCode == LoginActivity.RESULT_CANCELED) {
+                //Write your code if there's no result
+            }
+        }
+    }//onActivityResult
+
+
     private void showToast(String message){
 
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
