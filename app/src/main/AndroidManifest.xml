@@ -12,9 +12,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Eletrodos">
         <activity
+            android:name=".ListAdapter"
+            android:label="@string/title_activity_list_adapter"
+            android:theme="@style/Theme.Eletrodos.NoActionBar"></activity>
+        <activity
             android:name=".CalcularActivity"
             android:label="@string/title_activity_calcular"
-            android:theme="@style/Theme.Eletrodos.NoActionBar"></activity>
+            android:theme="@style/Theme.Eletrodos.NoActionBar" />
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"

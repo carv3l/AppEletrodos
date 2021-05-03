@@ -78,9 +78,11 @@ public class MainActivity extends AppCompatActivity implements LifecycleObserver
         cardChat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showToast("Chat Clicked");
+               // showToast("Chat Clicked");
 
-
+                Intent myIntent = new Intent(MainActivity.this, ListAdapter.class);
+                //  myIntent.putExtra("key", value); //Optional parameters
+                MainActivity.this.startActivity(myIntent);
 
 
             }
