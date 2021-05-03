@@ -24,9 +24,6 @@ public class ListAdapter extends AppCompatActivity {
         setContentView(R.layout.activity_list_adapter);
 
         Log.d("List","onCreate: Started");
-//        ListView mListView = (ListView)findViewById(R.id.listView);
-
-
 
         mNotas.add("Nota1");
         mNotas.add("Nota2");
