@@ -37,9 +37,12 @@ import java.util.Map;
 
 public class CalcularActivity extends AppCompatActivity {
 
+    String data = "";
     Button calculate;
+    Button saveButton;
     EditText spacing;
     EditText rmedido;
+    EditText notas;
     private static final String TAG = "MyActivity";
     CardView cardViewresult;
     LinearLayout mainLayout;
@@ -52,6 +55,7 @@ public class CalcularActivity extends AppCompatActivity {
         setContentView(R.layout.activity_calcular);
 
         calculate = findViewById(R.id.calculateButton);
+        saveButton = findViewById(R.id.SaveButton);
 
         spacing = (EditText)findViewById(R.id.EditTextSpacing);
         rmedido = (EditText)findViewById(R.id.EditTextMedida);
@@ -61,6 +65,8 @@ public class CalcularActivity extends AppCompatActivity {
         TextViewResult = (TextView)findViewById(R.id.TextViewResult);
 
         mainLayout = (LinearLayout)findViewById(R.id.LinearLayoutMain);
+
+        notas = (EditText)findViewById(R.id.EditTextNotas);
 
 
         calculate.setOnClickListener(new View.OnClickListener() {
@@ -72,6 +78,25 @@ public class CalcularActivity extends AppCompatActivity {
 
 
                 PostCalculate(spacing_value, measure_value);
+
+                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(mainLayout.getWindowToken(), 0);
+
+
+
+            }
+        });
+
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String spacing_value = spacing.getText().toString();
+                String measure_value = rmedido.getText().toString();
+                String nota = notas.getText().toString();
+
+
+                SaveMeasure(spacing_value,measure_value,data,nota);
 
                 InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(mainLayout.getWindowToken(), 0);
@@ -96,7 +121,7 @@ public class CalcularActivity extends AppCompatActivity {
         JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.POST, serverApi, new JSONObject(params),new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response){
-                    String data = "";
+
                         try {
                                 data = response.getString("data");
                            // Toast.makeText(CalcularActivity.this, "Response"+ response.getJSONObject("data"), Toast.LENGTH_LONG).show();
@@ -123,6 +148,21 @@ public class CalcularActivity extends AppCompatActivity {
         queue.add(getRequest);
 
     }
+
+   public void SaveMeasure(String  spacing, String medida, String result, String nota){
+
+
+
+
+
+
+   }
+
+
+
+
+
+
 
 
 }

@@ -37,10 +37,11 @@ import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity implements LifecycleObserver {
 
-    CardView cardHome;
-    CardView cardChat;
-    CardView cardProfile;
-    CardView cardWidget;
+    String result_user_id;
+    CardView cardCalcular;
+    CardView cardMedidas;
+    CardView cardLogin;
+    CardView cardExpeditions;
     CardView cardSettings;
     CardView cardLogout;
     TextView txUsername;
@@ -55,17 +56,17 @@ public class MainActivity extends AppCompatActivity implements LifecycleObserver
 
 
 
+        result_user_id = "0";
 
-
-        cardHome = findViewById(R.id.cardHome);
-        cardChat = findViewById(R.id.cardChat);
-        cardProfile = findViewById(R.id.cardProfile);
-        cardWidget = findViewById(R.id.cardWidgets);
+        cardCalcular = findViewById(R.id.cardCalculate);
+        cardMedidas = findViewById(R.id.cardMedidas);
+        cardLogin = findViewById(R.id.cardLogin);
+        cardExpeditions = findViewById(R.id.cardExpeditions);
         cardSettings = findViewById(R.id.cardSettings);
         cardLogout = findViewById(R.id.cardLogout);
         txUsername = (TextView)findViewById(R.id.textViewUserName);
 
-        cardHome.setOnClickListener(new View.OnClickListener() {
+        cardCalcular.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -78,19 +79,19 @@ public class MainActivity extends AppCompatActivity implements LifecycleObserver
 
             }
         });
-        cardChat.setOnClickListener(new View.OnClickListener() {
+        cardMedidas.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                // showToast("Chat Clicked");
 
                 Intent myIntent = new Intent(MainActivity.this, ListAdapter.class);
-                //  myIntent.putExtra("key", value); //Optional parameters
+                myIntent.putExtra("user_id", result_user_id); //Optional parameters
                 MainActivity.this.startActivity(myIntent);
 
 
             }
         });
-        cardProfile.setOnClickListener(new View.OnClickListener() {
+        cardLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent myIntent = new Intent(MainActivity.this, LoginActivity.class);
@@ -100,7 +101,7 @@ public class MainActivity extends AppCompatActivity implements LifecycleObserver
 
             }
         });
-        cardWidget.setOnClickListener(new View.OnClickListener() {
+        cardExpeditions.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showToast("Widget Clicked");
@@ -132,9 +133,10 @@ public class MainActivity extends AppCompatActivity implements LifecycleObserver
 
         if (requestCode == 0) {
             if(resultCode == LoginActivity.RESULT_OK){
-                String result= data.getStringExtra("result");
+                String result_name =  data.getStringExtra("r_name");
+                result_user_id =  data.getStringExtra("r_id");
                 //showToast("DONO É: "+ result);
-                txUsername.setText(result);
+                txUsername.setText(""+result_name);
             }
             if (resultCode == LoginActivity.RESULT_CANCELED) {
                 //Write your code if there's no result

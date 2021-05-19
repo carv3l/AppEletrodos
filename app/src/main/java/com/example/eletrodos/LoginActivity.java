@@ -65,7 +65,8 @@ public class LoginActivity extends AppCompatActivity {
         JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.POST, uri_post_login, new JSONObject(params),new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response){
-                String data = "";
+                String user_name = "";
+                String user_id = "";
                 Intent returnIntent = new Intent();
                 try {
                     Log.e("ResponseLogin","Response"+response.getString("status"));
@@ -75,14 +76,16 @@ public class LoginActivity extends AppCompatActivity {
 
                         Toast.makeText(LoginActivity.this, "ERRO, ESTE USER NÃO EXISTE", Toast.LENGTH_LONG).show();
                     }else {
-                        data = response.getJSONObject("data").getString("name");
+                        user_id = response.getJSONObject("data").getString("_id");
+                        user_name = response.getJSONObject("data").getString("name");
 
-                     //   Toast.makeText(LoginActivity.this, "BEM VINDO "+ data, Toast.LENGTH_LONG).show();
+                      // Toast.makeText(LoginActivity.this, "BEM VINDO "+ user_id, Toast.LENGTH_LONG).show();
 
 
-                        Log.e("ResponseLogin", "NAME: "+data);
+                        Log.e("ResponseLogin", "NAME: "+user_name);
 
-                        returnIntent.putExtra("result",data);
+                        returnIntent.putExtra("r_name", user_name);
+                        returnIntent.putExtra("r_id", user_id);
                         setResult(LoginActivity.RESULT_OK,returnIntent);
                         finish();
 
