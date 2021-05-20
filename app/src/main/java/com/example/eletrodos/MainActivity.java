@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity implements LifecycleObserver
                 //showToast("Home Clicked");
 
                 Intent myIntent = new Intent(MainActivity.this, CalcularActivity.class);
-                //  myIntent.putExtra("key", value); //Optional parameters
+                myIntent.putExtra("user_id", result_user_id); //Optional parameters
                 MainActivity.this.startActivity(myIntent);
 
             }

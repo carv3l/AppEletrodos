@@ -1,6 +1,8 @@
 package com.example.eletrodos;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.nfc.Tag;
 import android.os.Bundle;
 
@@ -14,9 +16,11 @@ import com.android.volley.toolbox.Volley;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
+import android.text.BoringLayout;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -49,6 +53,8 @@ public class CalcularActivity extends AppCompatActivity {
 
     TextView TextViewResult;
 
+    AlertDialog.Builder builder;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,12 +67,15 @@ public class CalcularActivity extends AppCompatActivity {
         rmedido = (EditText)findViewById(R.id.EditTextMedida);
 
         cardViewresult = (CardView)findViewById(R.id.card_view2);
-
         TextViewResult = (TextView)findViewById(R.id.TextViewResult);
 
         mainLayout = (LinearLayout)findViewById(R.id.LinearLayoutMain);
-
         notas = (EditText)findViewById(R.id.EditTextNotas);
+
+
+        Intent intent = getIntent();
+        String user_id = intent.getStringExtra("user_id");
+        builder = new AlertDialog.Builder(this);
 
 
         calculate.setOnClickListener(new View.OnClickListener() {
@@ -95,8 +104,13 @@ public class CalcularActivity extends AppCompatActivity {
                 String measure_value = rmedido.getText().toString();
                 String nota = notas.getText().toString();
 
-
-                SaveMeasure(spacing_value,measure_value,data,nota);
+              // Toast.makeText(CalcularActivity.this,user_id, Toast.LENGTH_SHORT).show();
+                if (user_id.equals("0")){
+                  //if(!Alert())
+                      Toast.makeText(CalcularActivity.this,""+Alert(), Toast.LENGTH_SHORT).show();
+                    //  SaveMeasure(spacing_value,measure_value,data,nota,"0");
+                }else
+                    SaveMeasure(spacing_value,measure_value,data,nota,user_id);
 
                 InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(mainLayout.getWindowToken(), 0);
@@ -149,7 +163,46 @@ public class CalcularActivity extends AppCompatActivity {
 
     }
 
-   public void SaveMeasure(String  spacing, String medida, String result, String nota){
+   public void SaveMeasure(String  spacing, String medida, String result, String nota, String id){
+
+       RequestQueue queue = Volley.newRequestQueue(this);
+       String serverApi ="https://eletrodos.herokuapp.com/api/medidas";
+
+       HashMap<String, String> params = new HashMap<String, String>();
+       params.put("espacamento", spacing); //Add the data you'd like to send to the server.
+       params.put("rmedido", medida);
+       params.put("resultado", result);
+       params.put("notas", nota);
+       params.put("id_user", id);
+
+
+
+       JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.POST, serverApi, new JSONObject(params),new Response.Listener<JSONObject>() {
+           @Override
+           public void onResponse(JSONObject response){
+
+               try {
+                   data = response.getString("data");
+                  // Toast.makeText(CalcularActivity.this, "Response"+ response.getJSONObject("data"), Toast.LENGTH_LONG).show();
+                   Toast.makeText(CalcularActivity.this, "Medida Guardada com Sucesso!!! ", Toast.LENGTH_LONG).show();
+
+                   ClearFields();
+
+               } catch (JSONException e) {
+                   e.printStackTrace();
+                   Log.e(TAG,"Err "+e);
+               }
+           }
+       },new Response.ErrorListener() { //Create an error listener to handle errors appropriately.
+           @Override
+           public void onErrorResponse(VolleyError error) {
+               //This code is executed if there is an error.
+               Toast.makeText(CalcularActivity.this, "Erro"+ error, Toast.LENGTH_LONG).show();
+           }
+       }
+       );
+       queue.add(getRequest);
+
 
 
 
@@ -158,6 +211,48 @@ public class CalcularActivity extends AppCompatActivity {
 
    }
 
+
+
+
+   public boolean Alert(){
+       final boolean[] status = {true};
+
+     builder.setTitle("Atenção!!!")
+               .setMessage("Está como convidado, pretende entrar como utilizador para guardar a medida?")
+               .setCancelable(true)
+               .setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+                   @Override
+                   public void onClick(DialogInterface dialog, int which) {
+                       finish();
+                   }
+               })
+               .setNegativeButton("Não", new DialogInterface.OnClickListener() {
+
+                   @Override
+                   public void onClick(DialogInterface dialog, int which) {
+                       status[0] = false;
+                       dialog.cancel();
+
+                   }
+               }).show();
+
+        return status[0];
+   }
+
+
+
+
+
+
+   public void ClearFields(){
+
+        spacing.setText("");
+        rmedido.setText("");
+        notas.setText("");
+        cardViewresult.setVisibility(View.GONE);
+        TextViewResult.setText("");
+
+   }
 
 
 
