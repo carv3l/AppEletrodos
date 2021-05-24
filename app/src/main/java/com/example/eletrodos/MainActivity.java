@@ -104,7 +104,14 @@ public class MainActivity extends AppCompatActivity implements LifecycleObserver
         cardExpeditions.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showToast("Widget Clicked");
+
+                Intent myIntent = new Intent(MainActivity.this, ExpeditionsListAdapter.class);
+                myIntent.putExtra("user_id", result_user_id); //Optional parameters
+                MainActivity.this.startActivity(myIntent);
+
+
+
+                // showToast("Widget Clicked");
 
             }
         });
