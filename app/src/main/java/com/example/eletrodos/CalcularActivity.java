@@ -41,6 +41,7 @@ import java.util.Map;
 
 public class CalcularActivity extends AppCompatActivity {
 
+    Boolean status = true;
     String data = "";
     Button calculate;
     Button saveButton;
@@ -100,18 +101,15 @@ public class CalcularActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                String spacing_value = spacing.getText().toString();
-                String measure_value = rmedido.getText().toString();
-                String nota = notas.getText().toString();
+
 
               // Toast.makeText(CalcularActivity.this,user_id, Toast.LENGTH_SHORT).show();
                 if (user_id.equals("0")){
                   //if(!Alert())
-                      Toast.makeText(CalcularActivity.this,""+Alert(), Toast.LENGTH_SHORT).show();
-                    //  SaveMeasure(spacing_value,measure_value,data,nota,"0");
+                   Alert();
+                   //   Toast.makeText(CalcularActivity.this,""+ resukt , Toast.LENGTH_SHORT).show();
                 }else
-                    SaveMeasure(spacing_value,measure_value,data,nota,user_id);
-
+                    SaveMeasure(data,user_id);
                 InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(mainLayout.getWindowToken(), 0);
 
@@ -163,14 +161,18 @@ public class CalcularActivity extends AppCompatActivity {
 
     }
 
-   public void SaveMeasure(String  spacing, String medida, String result, String nota, String id){
+   public void SaveMeasure(String result, String id){
+
+       String spacing_value = spacing.getText().toString();
+       String measure_value = rmedido.getText().toString();
+       String nota = notas.getText().toString();
 
        RequestQueue queue = Volley.newRequestQueue(this);
        String serverApi ="https://eletrodos.herokuapp.com/api/medidas";
 
        HashMap<String, String> params = new HashMap<String, String>();
-       params.put("espacamento", spacing); //Add the data you'd like to send to the server.
-       params.put("rmedido", medida);
+       params.put("espacamento", spacing_value); //Add the data you'd like to send to the server.
+       params.put("rmedido", measure_value);
        params.put("resultado", result);
        params.put("notas", nota);
        params.put("id_user", id);
@@ -214,11 +216,9 @@ public class CalcularActivity extends AppCompatActivity {
 
 
 
-   public boolean Alert(){
-       final boolean[] status = {true};
-
+   public void Alert1(){
      builder.setTitle("Atenção!!!")
-               .setMessage("Está como convidado, pretende entrar como utilizador para guardar a medida?")
+               .setMessage("Está como convidado, pretende entrar como utilizador? Depois terá de fazer uma nova medida")
                .setCancelable(true)
                .setPositiveButton("Sim", new DialogInterface.OnClickListener() {
                    @Override
@@ -230,15 +230,35 @@ public class CalcularActivity extends AppCompatActivity {
 
                    @Override
                    public void onClick(DialogInterface dialog, int which) {
-                       status[0] = false;
                        dialog.cancel();
 
+                      status = false;
                    }
                }).show();
 
-        return status[0];
    }
 
+    public void Alert()
+    {
+                builder.setTitle("Atenção!!!")
+                        .setMessage("Está como convidado, pretende entrar como utilizador? Depois terá de fazer uma nova medida")
+                        .setCancelable(true)
+                        .setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                finish();
+                            }
+                        })
+                        .setNegativeButton("Não", new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                                SaveMeasure(data,"0");
+                            }
+                }).show();
+
+    }
 
 
 
