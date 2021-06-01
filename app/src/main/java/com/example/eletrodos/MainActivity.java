@@ -1,5 +1,6 @@
 package com.example.eletrodos;
 
+import android.app.Application;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
@@ -33,6 +34,7 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.InetAddress;
 import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity implements LifecycleObserver {
@@ -65,6 +67,9 @@ public class MainActivity extends AppCompatActivity implements LifecycleObserver
         cardSettings = findViewById(R.id.cardSettings);
         cardLogout = findViewById(R.id.cardLogout);
         txUsername = (TextView)findViewById(R.id.textViewUserName);
+
+       showToast(""+isInternetAvailable());
+
 
         cardCalcular.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,6 +112,7 @@ public class MainActivity extends AppCompatActivity implements LifecycleObserver
 
                 Intent myIntent = new Intent(MainActivity.this, ExpeditionsListAdapter.class);
                 myIntent.putExtra("user_id", result_user_id); //Optional parameters
+               // myIntent.putExtra("user_id", "5f122f52d3859a5ad02b4bae"); //Optional parameters
                 MainActivity.this.startActivity(myIntent);
 
 
@@ -126,6 +132,10 @@ public class MainActivity extends AppCompatActivity implements LifecycleObserver
         cardLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                result_user_id = "0";
+                finish();
+
                 showToast("Logged Out Clicked");
 
             }
@@ -232,4 +242,18 @@ public class MainActivity extends AppCompatActivity implements LifecycleObserver
 
         return super.onOptionsItemSelected(item);
     }
+
+    public boolean isInternetAvailable() {
+        try {
+            InetAddress ipAddr = InetAddress.getByName("google.com");
+            //You can replace it with your name
+            return !ipAddr.equals("");
+
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+
 }
+

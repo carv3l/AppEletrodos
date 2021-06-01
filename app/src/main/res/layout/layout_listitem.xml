@@ -24,11 +24,12 @@
             android:id="@+id/TextView1"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:gravity="center"
-            android:textAlignment="center"
-            android:text="TextView1"
             android:layout_weight="66.6"
-            android:textColor="@color/black"/>
+            android:gravity="center"
+            android:text="TextView1"
+            android:textAlignment="center"
+            android:textColor="@color/black" />
+
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
@@ -48,6 +49,15 @@
                 android:layout_height="30dp"
                 android:gravity="center"
                 android:text="TextView3"
+                android:layout_below="@id/TextView2"
+                android:textColor="@color/black"/>
+            <TextView
+                android:id="@+id/TextViewId"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:gravity="center"
+                android:text=""
+                android:visibility="gone"
                 android:layout_below="@id/TextView2"
                 android:textColor="@color/black"/>
         </LinearLayout>

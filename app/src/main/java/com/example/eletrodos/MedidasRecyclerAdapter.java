@@ -49,6 +49,8 @@ public class MedidasRecyclerAdapter extends RecyclerView.Adapter<MedidasRecycler
         holder.linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+
                 Log.d("RecyclerAdapter","onClick: called"+mNotas.get(position));
 
                 Toast.makeText(mContext,mNotas.get(position), Toast.LENGTH_SHORT).show();
