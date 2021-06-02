@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Canvas;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -19,6 +20,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.material.snackbar.Snackbar;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
@@ -53,6 +55,10 @@ public class ExpeditionsListAdapter extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_adapter);
 
+        //showToast("Para Editar: Deslizar para a Direita");
+        //showToast("Para Apagar: Deslizar para a Esquerda");
+
+        showSnack("Noda");
 
         Intent intent = getIntent();
         id = intent.getStringExtra("user_id");
@@ -133,17 +139,23 @@ public class ExpeditionsListAdapter extends AppCompatActivity {
                 case ItemTouchHelper.LEFT: //SWIPE DA ESQUERDA PARA A DIREITA --- APAGAR
                    // Toast.makeText(ExpeditionsListAdapter.this, "Ola "+mId.get(position), Toast.LENGTH_LONG).show();
 
+                   String id_to_delete = mId.get(position);
+
                     //Apagar da Lista Visualmente
                     mNome.remove(position);
                     mData.remove(position);
                     mNotas.remove(position);
+                    mCoordenadas.remove(position);
+                    mIduser.remove(position);
+                    mId.remove(position);
 
-                    deleteExpedition(mId.get(position)); //Apagar no mongoDB
+                   deleteExpedition(id_to_delete); //Apagar no mongoDB
 
-                    recyclerView.removeViewAt(position);
+
                     adapter.notifyItemRemoved(position);
+                    recyclerView.removeViewAt(position);
 
-                   // Toast.makeText(ExpeditionsListAdapter.this, "Size "+mId.size(), Toast.LENGTH_LONG).show();
+
                     break;
                 case ItemTouchHelper.RIGHT: //SWIPE DA DIREITA PARA A ESQUERDA   --- EDITAR
 
@@ -165,16 +177,20 @@ public class ExpeditionsListAdapter extends AppCompatActivity {
                     break;
 
             }
+
+          //  adapter.notifyItemChanged(position);
         }
 
         @Override
         public void onChildDraw(@NonNull @NotNull Canvas c, @NonNull @NotNull RecyclerView recyclerView, @NonNull @NotNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
 
-            new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+          new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
                     .addSwipeLeftBackgroundColor(ContextCompat.getColor(ExpeditionsListAdapter.this,R.color.red))
                     .addSwipeLeftActionIcon(R.drawable.ic_baseline_delete_24)
+                    .addSwipeLeftLabel("Apagar")
                     .addSwipeRightBackgroundColor(ContextCompat.getColor(ExpeditionsListAdapter.this,R.color.Yellow))
                     .addSwipeRightActionIcon(R.drawable.ic_baseline_edit_24)
+                    .addSwipeRightLabel("Editar")
                     .create()
                     .decorate();
 
@@ -228,6 +244,29 @@ public class ExpeditionsListAdapter extends AppCompatActivity {
         queue.add(getRequest);
 
     }
+
+
+    private void showToast(String message){
+
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+    }
+
+    private void showSnack(String message){
+
+        final Snackbar snackBar = Snackbar.make(findViewById(android.R.id.content), "Para Editar, deslizar para a direita. Apagar, para a esquerda", Snackbar.LENGTH_INDEFINITE);
+
+        snackBar.setAction("Entendido", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Call your action method here
+                snackBar.dismiss();
+            }
+        });
+        snackBar.show();
+
+    }
+
+
 
 
 }
