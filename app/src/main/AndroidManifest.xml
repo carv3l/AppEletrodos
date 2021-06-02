@@ -18,9 +18,6 @@
             android:label="@string/title_activity_edit_expedition"
             android:theme="@style/Theme.Eletrodos.NoActionBar"></activity>
         <activity
-            android:name=".ui.login.EditarExpedicaoActivity"
-            android:label="@string/title_activity_editar_expedicao" />
-        <activity
             android:name=".LoginActivity"
             android:label="@string/title_activity_login"
             android:theme="@style/Theme.Eletrodos.NoActionBar" />
