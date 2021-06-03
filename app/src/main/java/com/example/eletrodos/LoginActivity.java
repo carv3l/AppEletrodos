@@ -67,6 +67,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onResponse(JSONObject response){
                 String user_name = "";
                 String user_id = "";
+                String user_email= "";
                 Intent returnIntent = new Intent();
                 try {
                     Log.e("ResponseLogin","Response"+response.getString("status"));
@@ -78,6 +79,7 @@ public class LoginActivity extends AppCompatActivity {
                     }else {
                         user_id = response.getJSONObject("data").getString("_id");
                         user_name = response.getJSONObject("data").getString("name");
+                        user_email = response.getJSONObject("data").getString("email");
 
                       // Toast.makeText(LoginActivity.this, "BEM VINDO "+ user_id, Toast.LENGTH_LONG).show();
 
@@ -86,6 +88,7 @@ public class LoginActivity extends AppCompatActivity {
 
                         returnIntent.putExtra("r_name", user_name);
                         returnIntent.putExtra("r_id", user_id);
+                        returnIntent.putExtra("r_mail",user_email);
                         setResult(LoginActivity.RESULT_OK,returnIntent);
                         finish();
 
