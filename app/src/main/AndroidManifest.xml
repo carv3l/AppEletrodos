@@ -22,7 +22,7 @@
             android:label="@string/title_activity_login"
             android:theme="@style/Theme.Eletrodos.NoActionBar" />
         <activity
-            android:name=".ListAdapter"
+            android:name=".MedidasListAdapter"
             android:label="@string/title_activity_list_adapter"
             android:theme="@style/Theme.Eletrodos.NoActionBar" />
         <activity
