@@ -7,9 +7,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ListAdapter"
+    tools:context=".MedidasListAdapter"
     android:background="@drawable/powersystemtransient">
 
+
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+    android:id="@+id/swipeRefreshLayoutMedidas"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
 
     <LinearLayout
@@ -20,12 +25,18 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
-            android:layout_height="742dp"
+            android:layout_height="match_parent"
             android:padding="4dp"
             android:scrollbars="vertical"
-            tools:ignore="NotSibling" />
+            tools:ignore="NotSibling"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
     </LinearLayout>
+
+
+
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
 
 
 </RelativeLayout>
