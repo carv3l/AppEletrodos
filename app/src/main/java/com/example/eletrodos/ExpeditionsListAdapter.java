@@ -62,7 +62,7 @@ public class ExpeditionsListAdapter extends AppCompatActivity {
 
         Intent intent = getIntent();
         id = intent.getStringExtra("user_id");
-    //    Toast.makeText(ListAdapter.this, "Id"+id, Toast.LENGTH_LONG).show();
+    //    Toast.makeText(MedidasListAdapter.this, "Id"+id, Toast.LENGTH_LONG).show();
         RequestQueue queue = Volley.newRequestQueue(this);
 
 
@@ -76,7 +76,7 @@ public class ExpeditionsListAdapter extends AppCompatActivity {
             public void onResponse(JSONObject response){
                 try {
 
-                    //     Toast.makeText(ListAdapter.this, "Response "+response, Toast.LENGTH_LONG).show();
+                    //     Toast.makeText(MedidasListAdapter.this, "Response "+response, Toast.LENGTH_LONG).show();
                     //    Log.v("ResponseList","Response"+response.getString("status"));
 //                    Log.v("ResponseList","Response"+response);
 
@@ -253,7 +253,7 @@ public class ExpeditionsListAdapter extends AppCompatActivity {
 
     private void showSnack(String message){
 
-        final Snackbar snackBar = Snackbar.make(findViewById(android.R.id.content), "Para Editar, deslizar para a direita. Apagar, para a esquerda", Snackbar.LENGTH_INDEFINITE);
+        final Snackbar snackBar = Snackbar.make(findViewById(android.R.id.content), "Editar, deslizar para a direita.\nApagar, para a esquerda", Snackbar.LENGTH_INDEFINITE);
 
         snackBar.setAction("Entendido", new View.OnClickListener() {
             @Override
