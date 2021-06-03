@@ -27,6 +27,7 @@ public class MedidasRecyclerAdapter extends RecyclerView.Adapter<MedidasRecycler
         this.mRMedido = mRMedido;
         this.mResultado = mResultado;
         this.mContext = context;
+
     }
 
     @NonNull
@@ -60,7 +61,7 @@ public class MedidasRecyclerAdapter extends RecyclerView.Adapter<MedidasRecycler
 
     @Override
     public int getItemCount() {
-        return mNotas.size();
+        return mResultado.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{

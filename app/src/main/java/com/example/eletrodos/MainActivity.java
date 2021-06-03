@@ -1,7 +1,6 @@
 package com.example.eletrodos;
 
-import android.app.Application;
-import android.app.Fragment;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -11,17 +10,14 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.OnLifecycleEvent;
 import androidx.lifecycle.ProcessLifecycleOwner;
-import androidx.navigation.fragment.NavHostFragment;
 
 import android.util.Log;
 import android.view.View;
@@ -34,12 +30,10 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.net.InetAddress;
-import java.util.HashMap;
-
 public class MainActivity extends AppCompatActivity implements LifecycleObserver {
 
     String result_user_id;
+    String result_user_mail;
     CardView cardCalcular;
     CardView cardMedidas;
     CardView cardLogin;
@@ -47,6 +41,16 @@ public class MainActivity extends AppCompatActivity implements LifecycleObserver
     CardView cardSettings;
     CardView cardLogout;
     TextView txUsername;
+
+    Boolean connStatus = true;
+
+    AlertDialog.Builder builder;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        wakeupApp();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements LifecycleObserver
         ProcessLifecycleOwner.get().getLifecycle().addObserver(this);
 
 
-
+        builder = new AlertDialog.Builder(this);
 
         result_user_id = "0";
 
@@ -68,7 +72,9 @@ public class MainActivity extends AppCompatActivity implements LifecycleObserver
         cardLogout = findViewById(R.id.cardLogout);
         txUsername = (TextView)findViewById(R.id.textViewUserName);
 
-       showToast(""+isInternetAvailable());
+     //  showToast(""+isInternetAvailable());
+
+       // wakeupApp();
 
 
         cardCalcular.setOnClickListener(new View.OnClickListener() {
@@ -89,8 +95,10 @@ public class MainActivity extends AppCompatActivity implements LifecycleObserver
             public void onClick(View v) {
                // showToast("Chat Clicked");
 
-                Intent myIntent = new Intent(MainActivity.this, ListAdapter.class);
+                Intent myIntent = new Intent(MainActivity.this, MedidasListAdapter.class);
                 myIntent.putExtra("user_id", result_user_id); //Optional parameters
+                myIntent.putExtra("user_mail", result_user_mail); //Optional parameters
+
                 MainActivity.this.startActivity(myIntent);
 
 
@@ -111,8 +119,8 @@ public class MainActivity extends AppCompatActivity implements LifecycleObserver
             public void onClick(View v) {
 
                 Intent myIntent = new Intent(MainActivity.this, ExpeditionsListAdapter.class);
-                myIntent.putExtra("user_id", result_user_id); //Optional parameters
-               // myIntent.putExtra("user_id", "5f122f52d3859a5ad02b4bae"); //Optional parameters
+                //myIntent.putExtra("user_id", result_user_id); //Optional parameters
+                myIntent.putExtra("user_id", "5f122f52d3859a5ad02b4bae"); //Optional parameters
                 MainActivity.this.startActivity(myIntent);
 
 
@@ -152,6 +160,7 @@ public class MainActivity extends AppCompatActivity implements LifecycleObserver
             if(resultCode == LoginActivity.RESULT_OK){
                 String result_name =  data.getStringExtra("r_name");
                 result_user_id =  data.getStringExtra("r_id");
+                result_user_mail = data.getStringExtra("r_mail");
                 //showToast("DONO É: "+ result);
                 txUsername.setText(""+result_name);
             }
@@ -179,7 +188,7 @@ public class MainActivity extends AppCompatActivity implements LifecycleObserver
     private void onAppForegrounded() {
 
         Log.d("MyApp", "App in foreground");
-        wakeupApp();
+     //   wakeupApp();
     }
 
 
@@ -193,29 +202,42 @@ public class MainActivity extends AppCompatActivity implements LifecycleObserver
         JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, serverApi, null,new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response){
-                String data = "";
+                String status = "";
                 try {
-                    data = response.getString("status");
-                    // Toast.makeText(CalcularActivity.this, "Response"+ response.getJSONObject("data"), Toast.LENGTH_LONG).show();
-                     Log.e("MyApp","Response é: "+response.getString("status"));
-                    //Log.e(TAG,"Response"+response);
+                    status = response.getString("status");
+
+                //    showToast(status);
+
+                    if (status.equals("OK")){
+                        if (!connStatus)
+                            setOfflineMode(false);
+
+
+                    }
+                        //showToast("COM INTERNET");
+
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                     Log.e("MyApp","Err "+e);
                 }
-
-
             }
         },new Response.ErrorListener() { //Create an error listener to handle errors appropriately.
             @Override
             public void onErrorResponse(VolleyError error) {
-                //This code is executed if there is an error.
-                Toast.makeText(MainActivity.this, "Erro"+ error, Toast.LENGTH_LONG).show();
+                //This code is executed if there is an error
+             //  showToast("Sem Ligação à Internet");
+
+
+                if (connStatus) {
+           //         showToast("" + error.networkResponse);
+                    setOfflineMode(true);
+                  //  Alert("" + error.networkResponse);
+                }
             }
         }
         );
         queue.add(getRequest);
-
 
     }
 
@@ -243,15 +265,74 @@ public class MainActivity extends AppCompatActivity implements LifecycleObserver
         return super.onOptionsItemSelected(item);
     }
 
-    public boolean isInternetAvailable() {
-        try {
-            InetAddress ipAddr = InetAddress.getByName("google.com");
-            //You can replace it with your name
-            return !ipAddr.equals("");
 
-        } catch (Exception e) {
-            return false;
+    public void Alert(String message)
+    {
+
+        builder.setTitle("Atenção!!!")
+                .setMessage("Não tem ligação à Internet. \n Pretende usar a app no modo offline?"+message)
+                .setCancelable(true)
+                .setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //finish();
+
+
+                    }
+                })
+                .setNegativeButton("Não", new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+
+
+                    }
+                }).show();
+
+    }
+
+    public void setOfflineMode(boolean mode){
+
+        if (mode){
+            connStatus = false;
+
+            cardLogin.setEnabled(false);
+            cardLogin.setCardBackgroundColor(getColor(R.color.LightGray));
+
+            cardExpeditions.setEnabled(false);
+            cardExpeditions.setCardBackgroundColor(getColor(R.color.LightGray));
+
+            cardSettings.setEnabled(false);
+            cardSettings.setCardBackgroundColor(getColor(R.color.LightGray));
+
+            cardLogout.setEnabled(false);
+            cardLogout.setCardBackgroundColor(getColor(R.color.LightGray));
+
+
+
+        }else if(!mode){
+
+            connStatus = true;
+
+            cardLogin.setEnabled(true);
+            cardLogin.setCardBackgroundColor(getColor(R.color.white));
+
+            cardExpeditions.setEnabled(true);
+            cardExpeditions.setCardBackgroundColor(getColor(R.color.white));
+
+            cardSettings.setEnabled(true);
+            cardSettings.setCardBackgroundColor(getColor(R.color.white));
+
+            cardLogout.setEnabled(true);
+            cardLogout.setCardBackgroundColor(getColor(R.color.white));
+
+
         }
+
+
+
+
     }
 
 
