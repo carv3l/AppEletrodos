@@ -193,7 +193,7 @@ public class CalcularActivity extends AppCompatActivity {
            //    Toast.makeText(CalcularActivity.this, "Erro"+ (error instanceof NetworkError), Toast.LENGTH_LONG).show();
 
                if(error instanceof NetworkError) { //this spits true
-                   Alert1();
+                  Alert1();
                  //  saveOffline(params);
                }
                }
@@ -220,11 +220,15 @@ public class CalcularActivity extends AppCompatActivity {
                             }
                         })
                         .setNegativeButton("Não", new DialogInterface.OnClickListener() {
-
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.cancel();
-                                SaveMeasure("0");
+                                isNetworkAvailable();
+                                if(!connStatus){
+
+                                    saveOffline(params,"0");
+                                }else
+                                    SaveMeasure("0");
                             }
                 }).show();
 
@@ -261,6 +265,10 @@ public class CalcularActivity extends AppCompatActivity {
 
     public void saveOffline(HashMap params,String id){
         params.put("id_user", id);
+
+        String temp_id = params.get("espacamento").toString()+params.get("rmedido").toString()+params.get("notas").toString();
+        showToast("Temp id"+temp_id);
+        params.put("temp_id",temp_id);
 
        JSONObject JsonParams = new JSONObject(params);
 
@@ -307,7 +315,7 @@ public class CalcularActivity extends AppCompatActivity {
           // showToast("Erro"+e);
        }
 
-readfile();
+//readfile();
    }
 
 
@@ -430,7 +438,8 @@ try {
 
                 //Detecta se Tem internet para guardar online
                 //    Toast.makeText(CalcularActivity.this, "Erro"+ (error instanceof NetworkError), Toast.LENGTH_LONG).show();
-                showToast("IN HERE");
+
+               // showToast("IN HERE");
                 if(error instanceof NetworkError)  //this spits true
                     connStatus = false;
 
