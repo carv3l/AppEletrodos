@@ -12,6 +12,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 
 public class MedidasRecyclerAdapter extends RecyclerView.Adapter<MedidasRecyclerAdapter.ViewHolder> {
@@ -35,6 +37,8 @@ public class MedidasRecyclerAdapter extends RecyclerView.Adapter<MedidasRecycler
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_listitem,parent, false);
         ViewHolder holder = new ViewHolder(view);
+
+        onViewAttachedToWindow(holder);
         return holder;
     }
 
@@ -58,6 +62,12 @@ public class MedidasRecyclerAdapter extends RecyclerView.Adapter<MedidasRecycler
             }
         });
     }
+
+    @Override
+    public void onDetachedFromRecyclerView(@NonNull @NotNull RecyclerView recyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView);
+    }
+
 
     @Override
     public int getItemCount() {

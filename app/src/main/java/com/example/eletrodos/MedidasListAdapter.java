@@ -1,9 +1,14 @@
 package com.example.eletrodos;
 
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Canvas;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -20,18 +25,27 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.android.material.snackbar.Snackbar;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
 public class MedidasListAdapter extends AppCompatActivity {
 
@@ -42,6 +56,7 @@ public class MedidasListAdapter extends AppCompatActivity {
 
     public boolean connStatus = true;
 
+    private Context mContext;
     SwipeRefreshLayout swipeRefreshLayout;
 
     MedidasRecyclerAdapter adapter;
@@ -50,6 +65,7 @@ public class MedidasListAdapter extends AppCompatActivity {
     private ArrayList<String> mNotas = new ArrayList<>();
     private ArrayList<String> mRMedido= new ArrayList<>();
     private ArrayList<String> mResultado = new ArrayList<>();
+    private ArrayList<String> mId_Medida = new ArrayList<>();
 
 
     @Override
@@ -62,7 +78,7 @@ public class MedidasListAdapter extends AppCompatActivity {
 
         loadData(g_id);
 
-
+// Isto atrasa 2 ms para que primeiro se receba uma resposta se há net ou não
         h.postDelayed(new Runnable() {
 
             public void run() {
@@ -77,6 +93,7 @@ public class MedidasListAdapter extends AppCompatActivity {
             }
 
         }, 2000);
+
         super.onResume();
     }
 
@@ -91,10 +108,16 @@ public class MedidasListAdapter extends AppCompatActivity {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-              //  loadData(g_id);
-               recyclerView.removeAllViews();
+                adapter = null;
+                recyclerView.refreshDrawableState();
+
+                //loadData(g_id);
+             //     recyclerView.removeViewsInLayout(0,adapter.getItemCount());
+              //  adapter.notifyAll();
+            //    adapter.notifyItemRangeChanged(0,adapter.getItemCount());
+           //     recyclerView.destroyDrawingCache();
                // recyclerView.removeViewsInLayout(0,adapter.getItemCount());
-                adapter.notifyDataSetChanged();
+              //  adapter.notifyDataSetChanged();
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
@@ -136,6 +159,7 @@ public class MedidasListAdapter extends AppCompatActivity {
                             mNotas.add(jObject.getString("nota"));
                             mRMedido.add(jObject.getString("r_medido"));
                             mResultado.add(jObject.getString("r_solo"));
+                            mId_Medida.add(jObject.getString("_id"));
 
 
                           //   Log.v("ResponseList","This"+ response.getJSONArray("data").getJSONObject(i));
@@ -153,10 +177,6 @@ public class MedidasListAdapter extends AppCompatActivity {
         },new Response.ErrorListener() { //Create an error listener to handle errors appropriately.
             @Override
             public void onErrorResponse(VolleyError error) {
-                //This code is executed if there is an error.
-                // Toast.makeText(MedidasListAdapter.this, "Erro No net "+ error, Toast.LENGTH_LONG).show();
-
-                //Caso detecte que não há Internet
 
                 if(error instanceof NetworkError) { //this spits true
                     //saveOffline(params);
@@ -180,11 +200,12 @@ public class MedidasListAdapter extends AppCompatActivity {
     }
 
     private void initRecyclerView(){
-
-
         adapter = new MedidasRecyclerAdapter(this,mNotas,mRMedido,mResultado);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
+        itemTouchHelper.attachToRecyclerView(recyclerView);
     }
 
     public void readfile(){
@@ -206,6 +227,7 @@ public class MedidasListAdapter extends AppCompatActivity {
             mNotas.add(jsonObject.getString("notas"));
             mRMedido.add(jsonObject.getString("rmedido"));
             mResultado.add(jsonObject.getString("resultado"));
+            mId_Medida.add(jsonObject.getString("temp_id"));
               //  Log.d("Calcular",""+jsonArr.get(i));
 
 
@@ -251,37 +273,6 @@ public class MedidasListAdapter extends AppCompatActivity {
             return true;
         }else
             return false;
-    }
-
-    public void mailtoid1(String mail){
-        RequestQueue queue = Volley.newRequestQueue(this);
-        String uri_get_user ="https://eletrodos.herokuapp.com/api/user/";
-
-        JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, uri_get_user+mail, null,new Response.Listener<JSONObject>() {
-
-
-            @Override
-            public void onResponse(JSONObject response){
-
-                try {
-                    JSONObject jobj = response.getJSONArray("data").getJSONObject(1);
-
-                    showToast(""+jobj.getString("id_user"));
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    Log.e("MyApp","Err "+e);
-                }
-            }
-        },new Response.ErrorListener() { //Create an error listener to handle errors appropriately.
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                //This code is executed if there is an error.
-                error.printStackTrace();
-            }
-        }
-        );
-        queue.add(getRequest);
     }
 
     public boolean mailtoid(String mail) {
@@ -413,5 +404,201 @@ public class MedidasListAdapter extends AppCompatActivity {
 
 
     }
+
+    // ----------------------  SWIPE DIREITA E ESQUERDA -------------------
+    ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+        @Override
+        public boolean onMove(@NonNull @NotNull RecyclerView recyclerView, @NonNull @NotNull RecyclerView.ViewHolder viewHolder, @NonNull @NotNull RecyclerView.ViewHolder target) {
+            return false;
+        }
+
+        @Override
+        public void onSwiped(@NonNull @NotNull RecyclerView.ViewHolder viewHolder, int direction) {
+
+
+            int position = viewHolder.getAdapterPosition();
+
+            switch (direction){
+                case ItemTouchHelper.LEFT: //SWIPE DA ESQUERDA PARA A DIREITA --- APAGAR
+                    // Toast.makeText(ExpeditionsListAdapter.this, "Ola "+mId.get(position), Toast.LENGTH_LONG).show();
+
+                    String id_to_delete = mId_Medida.get(position);
+
+                    //Apagar da Lista Visualmente
+                    mRMedido.remove(position);
+                    mResultado.remove(position);
+                    mNotas.remove(position);
+              //      mCoordenadas.remove(position);
+              //      mIduser.remove(position);
+              //      mId.remove(position);
+
+                    deleteMedida(id_to_delete); //Apagar no mongoDB
+
+                    adapter.notifyItemRemoved(position);
+                    recyclerView.removeViewAt(position);
+
+
+                    break;
+                case ItemTouchHelper.RIGHT: //SWIPE DA DIREITA PARA A ESQUERDA   --- EDITAR
+
+            /*
+                    ArrayList<String> mDados = new ArrayList<>();
+                    mDados.add(mId.get(position));
+                    mDados.add(mNome.get(position));
+                    mDados.add(mData.get(position));
+                    mDados.add(mNotas.get(position));
+                    mDados.add(mCoordenadas.get(position));
+                    mDados.add(mIduser.get(position));
+
+                    adapter.notifyItemChanged(position);
+
+                    Intent myIntent = new Intent(ExpeditionsListAdapter.this, EditExpedition.class);
+                    myIntent.putExtra("expedition_data", mDados); //Optional parameters
+                    ExpeditionsListAdapter.this.startActivity(myIntent);
+                    finish();
+*/
+                    break;
+
+            }
+
+            //  adapter.notifyItemChanged(position);
+        }
+
+        @Override
+        public void onChildDraw(@NonNull @NotNull Canvas c, @NonNull @NotNull RecyclerView recyclerView, @NonNull @NotNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+
+            new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+                    .addSwipeLeftBackgroundColor(ContextCompat.getColor(MedidasListAdapter.this,R.color.red))
+                    .addSwipeLeftActionIcon(R.drawable.ic_baseline_delete_24)
+                    .addSwipeLeftLabel("Apagar")
+                    .addSwipeRightBackgroundColor(ContextCompat.getColor(MedidasListAdapter.this,R.color.Yellow))
+                    .addSwipeRightActionIcon(R.drawable.ic_baseline_edit_24)
+                    .addSwipeRightLabel("Editar")
+                    .create()
+                    .decorate();
+
+
+            super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+        }
+    };
+
+    private void deleteMedida(String id_medida){
+
+        String uri_apagar_expedicao = "https://eletrodos.herokuapp.com/api/medidas/";
+
+        RequestQueue queue = Volley.newRequestQueue(this);
+
+        JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.DELETE, uri_apagar_expedicao+id_medida, null,new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response){
+                String data = "";
+                try {
+                    data = response.getString("data");
+                    //Toast.makeText(ExpeditionsListAdapter.this, "Response"+ response.getJSONObject("data"), Toast.LENGTH_LONG).show();
+                    //Log.e("MyApp","Response é: "+response.getString("status"));
+                    Log.e("List","Response"+response);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Log.e("MyApp","Err "+e);
+                }
+
+
+            }
+        },new Response.ErrorListener() { //Create an error listener to handle errors appropriately.
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                //This code is executed if there is an error.
+
+                if(error instanceof NetworkError) { //this spits true
+                    deleteINfile(id_medida);
+                }
+
+            }
+        }
+        );
+        queue.add(getRequest);
+
+    }
+
+    public void deleteINfile(String temporary_id) {
+
+        String filename= getFilesDir()+"/temp.json";
+
+        JSONObject jsonObject = null;//parseJSONFile(filename);
+
+        JSONArray jsonArr= parseJSONFile(filename);
+
+        // showToast(""+jsonObject);
+        Log.d("Calcular","RESULT:"+jsonArr);
+
+        try {
+            for (int i = 0; i< jsonArr.length();i++){
+
+                jsonObject = jsonArr.getJSONObject(i);
+
+
+                if(jsonObject.getString("temp_id").equals(temporary_id)){
+
+                    jsonArr.remove(i);
+
+                }
+
+            }
+        } catch (JSONException e) {
+            Log.e("Calcular",""+e);
+        }
+        HashMap<String,String> obj = new HashMap<>();
+
+
+try {
+    for (int i = 0; i < jsonArr.length(); i++) {
+        obj.put("resultado",jsonArr.getJSONObject(i).getString("resultado"));
+        obj.put("temp_id",jsonArr.getJSONObject(i).getString("temp_id"));
+        obj.put("notas",jsonArr.getJSONObject(i).getString("notas"));
+        obj.put("id_user",jsonArr.getJSONObject(i).getString("id_user"));
+        obj.put("espacamento",jsonArr.getJSONObject(i).getString("espacamento"));
+        obj.put("rmedido",jsonArr.getJSONObject(i).getString("rmedido"));
+
+    }
+}catch (Exception e){
+
+    e.printStackTrace();
+}
+
+        overWriteFile(obj); //Apaga a medida no ficheiro ao sobreescrever
+
+        initRecyclerView();
+        adapter.notifyDataSetChanged();
+    }
+
+    public void overWriteFile(HashMap obj){
+
+        String filename= getFilesDir()+"/temp.json";
+
+        BufferedWriter writer = null;
+
+        BufferedReader reader = null;
+
+        //Escreve No Ficheiro JSON
+        try {
+            writer = new BufferedWriter(new FileWriter(filename,false));
+
+                writer.write(""+obj);
+
+            writer.close();
+            showToast("Medida Apagada");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            // showToast("Erro"+e);
+        }
+
+    }
+
+
+
+
+
+
 
 }
