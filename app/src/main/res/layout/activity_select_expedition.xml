@@ -72,6 +72,7 @@
 
                         <Spinner
                             android:id="@+id/spinner_Ex"
+                            android:paddingTop="40dp"
                             android:layout_height="wrap_content"
                             android:layout_width="wrap_content"
                             android:layout_weight="1.0"
@@ -82,35 +83,25 @@
 
                 </LinearLayout>
 
-                <LinearLayout
+                <RelativeLayout
+                    android:layout_marginTop="6dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:orientation="vertical"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp">
+                    android:layout_marginLeft="10dp"
+                    android:paddingTop="20sp">
 
 
-                    <LinearLayout
-                        android:id="@+id/linearLayout03"
+                    <Button
+                        android:id="@+id/associateExButton"
                         android:layout_width="match_parent"
-                        android:layout_height="33dp"
-                        android:gravity="top|bottom|center_vertical|fill_vertical|center|fill"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="10dp"
-                            android:layout_weight="1.0"
-                            android:text="Ou"
-                            android:textSize="18sp"
-                            android:textColor="@color/black"/>
-
-                    </LinearLayout>
-
-
-                </LinearLayout>
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:paddingTop="9dp"
+                        android:paddingBottom="9dp"
+                        android:text="Associar Expedição"
+                        android:textColor="@color/white"
+                        android:textSize="19sp"/>
+                </RelativeLayout>
 
                 <RelativeLayout
                     android:layout_marginTop="6dp"
@@ -127,7 +118,7 @@
                         android:gravity="center"
                         android:paddingTop="9dp"
                         android:paddingBottom="9dp"
-                        android:text="Criar"
+                        android:text="Criar Expedição"
                         android:textColor="@color/white"
                         android:textSize="19sp"/>
                 </RelativeLayout>
