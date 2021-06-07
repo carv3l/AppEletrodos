@@ -23,4 +23,6 @@
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
     <string name="title_activity_edit_expedition">EditExpedition</string>
+    <string name="title_activity_criar_expedition">CriarExpedition</string>
+    <string name="title_activity_select_expedition">SelectExpedition</string>
 </resources>
