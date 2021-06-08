@@ -1,4 +1,4 @@
-package com.example.eletrodos;
+package com.IPG.eletrodos;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -19,9 +19,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
-import android.text.Editable;
 import android.util.Log;
-;
+
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -35,11 +34,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.PropertyAccessor;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SequenceWriter;
-
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -51,11 +45,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 
 
 public class CalcularActivity extends AppCompatActivity {
@@ -100,6 +90,7 @@ public class CalcularActivity extends AppCompatActivity {
         notas = (EditText)findViewById(R.id.EditTextNotas);
 
 
+        Intent intent = getIntent();
         String user_id = sp.getString("user_id","0");
         builder = new AlertDialog.Builder(this);
 

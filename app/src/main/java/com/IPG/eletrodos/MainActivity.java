@@ -1,16 +1,18 @@
-package com.example.eletrodos;
+package com.IPG.eletrodos;
 
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import com.IPG.eletrodos.R;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.IPG.eletrodos.MedidasListAdapter;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -89,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements LifecycleObserver
             public void onClick(View v) {
 
 
-                Intent myIntent = new Intent(MainActivity.this, CalcularActivity.class);
+                Intent myIntent = new Intent(MainActivity.this, com.IPG.eletrodos.CalcularActivity.class);
                 MainActivity.this.startActivity(myIntent);
 
             }

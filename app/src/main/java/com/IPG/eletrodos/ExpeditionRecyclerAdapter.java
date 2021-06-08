@@ -1,4 +1,4 @@
-package com.example.eletrodos;
+package com.IPG.eletrodos;
 
 import android.content.Context;
 import android.util.Log;

@@ -1,4 +1,4 @@
-package com.example.eletrodos;
+package com.IPG.eletrodos;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -15,6 +15,8 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.IPG.eletrodos.ExpeditionRecyclerAdapter;
+import com.IPG.eletrodos.R;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
