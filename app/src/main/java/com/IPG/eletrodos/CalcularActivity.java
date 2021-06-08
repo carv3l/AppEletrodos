@@ -2,7 +2,6 @@ package com.IPG.eletrodos;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
@@ -29,16 +28,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
-import java.nio.file.Paths;
+
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -50,7 +44,6 @@ import java.util.HashMap;
 
 public class CalcularActivity extends AppCompatActivity {
 
-    Boolean status = true;
     int convertedcfinal = 0;
     Button calculate;
     Button saveButton;
@@ -65,7 +58,7 @@ public class CalcularActivity extends AppCompatActivity {
 
     TextView TextViewResult;
 
-    HashMap<String, String> params = new HashMap<String, String>();
+    HashMap<String, String> params = new HashMap<>();
 
 
     AlertDialog.Builder builder;
@@ -90,7 +83,6 @@ public class CalcularActivity extends AppCompatActivity {
         notas = (EditText)findViewById(R.id.EditTextNotas);
 
 
-        Intent intent = getIntent();
         String user_id = sp.getString("user_id","0");
         builder = new AlertDialog.Builder(this);
 
@@ -154,7 +146,6 @@ public class CalcularActivity extends AppCompatActivity {
    public void SaveMeasure(String id){
 
 
-
        RequestQueue queue = Volley.newRequestQueue(this);
        String serverApi ="https://eletrodos.herokuapp.com/api/medidas";
 
@@ -166,11 +157,8 @@ public class CalcularActivity extends AppCompatActivity {
 
                try {
 
-
-                   String data = response.getJSONObject("data").toString();
-
-                  // Toast.makeText(CalcularActivity.this, "Response"+ response.getJSONObject("data"), Toast.LENGTH_LONG).show();
-                   Toast.makeText(CalcularActivity.this, "Medida Guardada com Sucesso!!!", Toast.LENGTH_LONG).show();
+                   Toast.makeText(CalcularActivity.this, response.getJSONObject("message").toString(), Toast.LENGTH_LONG).show();
+                  // Toast.makeText(CalcularActivity.this, "Medida Guardada com Sucesso!!!", Toast.LENGTH_LONG).show();
 
                    ClearFields();
 
@@ -290,7 +278,7 @@ public class CalcularActivity extends AppCompatActivity {
        }catch (NoSuchFileException e){
            isempty = true;
        } catch (IOException e) {
-           isempty = true;;
+           isempty = true;
        }
 
         //Escreve No Ficheiro JSON
@@ -312,75 +300,6 @@ public class CalcularActivity extends AppCompatActivity {
 
 //readfile();
    }
-
-
-    public void readfile(){
-
-        String filename= getFilesDir()+"/temp.json";
-
-      //  JSONObject jsonObject = parseJSONFile(filename);
-
-        JSONArray jsonArr= parseJSONFile(filename);
-
-       // showToast(""+jsonObject);
-        Log.d("Calcular","RESULT:"+jsonArr);
-
-try {
-    for (int i = 0; i< jsonArr.length();i++){
-
-
-        Log.d("Calcular",""+jsonArr.get(i));
-
-
-    }
-} catch (JSONException e) {
-    Log.e("Calcular",""+e);
-}
-
-
-    }
-
-    public static JSONArray parseJSONFile(String filename){
-
-        JSONObject jobj = null;
-
-        JSONArray jArr = null;
-
-        String content = null;
-        try {
-                content = String.valueOf(Files.readAllLines(Paths.get(filename)));
-                jArr = new JSONArray(content);
-
-        } catch (IOException | JSONException e) {
-            e.printStackTrace();
-            Log.e("Calcular",""+e);
-        }
-        return jArr;
-    }
-
-
-    public void CustomAlert(String message)
-    {
-        builder.setTitle("Atenção!!!")
-                .setMessage(message)
-                .setCancelable(true)
-                .setPositiveButton("Sim", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        finish();
-                    }
-                })
-                .setNegativeButton("Não", new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                        SaveMeasure("0");
-                    }
-                }).show();
-
-    }
-
 
     public void ClearFields(){
 
