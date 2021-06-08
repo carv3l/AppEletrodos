@@ -98,6 +98,7 @@ public class MedidasListAdapter extends AppCompatActivity {
     }
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -121,7 +122,6 @@ public class MedidasListAdapter extends AppCompatActivity {
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
-
     }
 
     @Override
@@ -200,7 +200,7 @@ public class MedidasListAdapter extends AppCompatActivity {
     }
 
     private void initRecyclerView(){
-        adapter = new MedidasRecyclerAdapter(this,mNotas,mRMedido,mResultado);
+        adapter = new MedidasRecyclerAdapter(this,mNotas,mRMedido,mResultado,mId_Medida,g_id);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 

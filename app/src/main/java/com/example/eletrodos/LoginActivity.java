@@ -1,6 +1,7 @@
 package com.example.eletrodos;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import com.android.volley.Request;
@@ -34,11 +35,15 @@ public class LoginActivity extends AppCompatActivity {
     Button login ;
     EditText mail;
     EditText password;
+    SharedPreferences sp;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        sp = getSharedPreferences("login", MODE_PRIVATE);
 
         mail = (EditText)findViewById(R.id.EditTextMailLogin);
         password = (EditText)findViewById(R.id.EditTextPasswordLogin);
@@ -85,6 +90,8 @@ public class LoginActivity extends AppCompatActivity {
 
 
                         Log.e("ResponseLogin", "NAME: "+user_name);
+
+                        sp.edit().putString("user_id",user_id).apply();
 
                         returnIntent.putExtra("r_name", user_name);
                         returnIntent.putExtra("r_id", user_id);

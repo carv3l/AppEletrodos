@@ -127,18 +127,8 @@ public class EditExpedition extends AppCompatActivity {
                 queue.add(getRequest);
                 //  Log.d("List","onCreate: Started");
 
-
-
-
-
             }
         });
-
-
-
-
-
-
 
     }
 
