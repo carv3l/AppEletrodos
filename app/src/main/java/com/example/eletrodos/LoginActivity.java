@@ -92,6 +92,10 @@ public class LoginActivity extends AppCompatActivity {
                         Log.e("ResponseLogin", "NAME: "+user_name);
 
                         sp.edit().putString("user_id",user_id).apply();
+                        sp.edit().putString("user_name",user_name).apply();
+                        sp.edit().putString("user_email",user_email).apply();
+                        sp.edit().putBoolean("logged",true).apply();
+
 
                         returnIntent.putExtra("r_name", user_name);
                         returnIntent.putExtra("r_id", user_id);

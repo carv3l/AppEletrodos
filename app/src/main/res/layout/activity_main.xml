@@ -32,14 +32,14 @@
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cardCalculate"
-            android:layout_width="wrap_content"
+            android:layout_width="121dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="fill"
             android:layout_row="0"
-            app:cardBackgroundColor="@color/white"
             android:layout_rowWeight="1"
             android:layout_column="0"
             android:layout_columnWeight="1"
+            android:layout_gravity="fill"
+            app:cardBackgroundColor="@color/white"
             app:cardCornerRadius="8dp"
             app:cardElevation="8dp"
             app:cardUseCompatPadding="true">
@@ -60,8 +60,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Calcular"
-                    android:textSize="16sp"
-                    android:textColor="@color/black"></TextView>
+                    android:textColor="@color/black"
+                    android:textSize="16sp"></TextView>
 
 
             </LinearLayout>
@@ -71,16 +71,16 @@
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cardMedidas"
-            android:layout_width="wrap_content"
+            android:layout_width="115dp"
             android:layout_height="wrap_content"
             android:layout_row="0"
             android:layout_rowWeight="1"
             android:layout_column="1"
             android:layout_columnWeight="1"
             android:layout_gravity="fill"
+            app:cardBackgroundColor="@color/white"
             app:cardCornerRadius="8dp"
             app:cardElevation="8dp"
-            app:cardBackgroundColor="@color/white"
             app:cardUseCompatPadding="true">
 
             <LinearLayout
@@ -99,8 +99,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Medidas"
-                    android:textSize="16sp"
-                    android:textColor="@color/black"></TextView>
+                    android:textColor="@color/black"
+                    android:textSize="16sp"></TextView>
 
 
             </LinearLayout>

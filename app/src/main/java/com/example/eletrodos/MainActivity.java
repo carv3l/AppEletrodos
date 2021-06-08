@@ -2,6 +2,7 @@ package com.example.eletrodos;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import com.android.volley.Request;
@@ -43,19 +44,27 @@ public class MainActivity extends AppCompatActivity implements LifecycleObserver
     TextView txUsername;
 
     Boolean connStatus = true;
-
+    SharedPreferences sp;
     AlertDialog.Builder builder;
 
     @Override
     protected void onResume() {
         super.onResume();
+        if(sp.getBoolean("logged",false)){
+            txUsername.setText(""+sp.getString("user_name","Convidado"));
+        }else
+            txUsername.setText("Convidado");
         wakeupApp();
+
+
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        sp = getSharedPreferences("login",MODE_PRIVATE);
 
         ProcessLifecycleOwner.get().getLifecycle().addObserver(this);
 
@@ -72,9 +81,7 @@ public class MainActivity extends AppCompatActivity implements LifecycleObserver
         cardLogout = findViewById(R.id.cardLogout);
         txUsername = (TextView)findViewById(R.id.textViewUserName);
 
-     //  showToast(""+isInternetAvailable());
 
-       // wakeupApp();
 
 
         cardCalcular.setOnClickListener(new View.OnClickListener() {
@@ -82,10 +89,7 @@ public class MainActivity extends AppCompatActivity implements LifecycleObserver
             public void onClick(View v) {
 
 
-                //showToast("Home Clicked");
-
                 Intent myIntent = new Intent(MainActivity.this, CalcularActivity.class);
-                myIntent.putExtra("user_id", result_user_id); //Optional parameters
                 MainActivity.this.startActivity(myIntent);
 
             }
@@ -96,9 +100,6 @@ public class MainActivity extends AppCompatActivity implements LifecycleObserver
                // showToast("Chat Clicked");
 
                 Intent myIntent = new Intent(MainActivity.this, MedidasListAdapter.class);
-                myIntent.putExtra("user_id", result_user_id); //Optional parameters
-                myIntent.putExtra("user_mail", result_user_mail); //Optional parameters
-
                 MainActivity.this.startActivity(myIntent);
 
 
@@ -108,9 +109,7 @@ public class MainActivity extends AppCompatActivity implements LifecycleObserver
             @Override
             public void onClick(View v) {
                 Intent myIntent = new Intent(MainActivity.this, LoginActivity.class);
-                //  myIntent.putExtra("key", value); //Optional parameters
-                MainActivity.this.startActivityForResult(myIntent, 0);
-             //   showToast("Profile Clicked");
+                MainActivity.this.startActivity(myIntent);
 
             }
         });
@@ -119,13 +118,7 @@ public class MainActivity extends AppCompatActivity implements LifecycleObserver
             public void onClick(View v) {
 
                 Intent myIntent = new Intent(MainActivity.this, ExpeditionsListAdapter.class);
-                //myIntent.putExtra("user_id", result_user_id); //Optional parameters
-                myIntent.putExtra("user_id", "5f122f52d3859a5ad02b4bae"); //Optional parameters
                 MainActivity.this.startActivity(myIntent);
-
-
-
-                // showToast("Widget Clicked");
 
             }
         });
@@ -141,35 +134,18 @@ public class MainActivity extends AppCompatActivity implements LifecycleObserver
             @Override
             public void onClick(View v) {
 
-                result_user_id = "0";
+                getSharedPreferences("login", MODE_PRIVATE).edit().clear().apply();
+                Intent i = new Intent(MainActivity.this, MainActivity.class);
                 finish();
+                overridePendingTransition(0, 0);
+                startActivity(i);
+                overridePendingTransition(0, 0);
 
-                showToast("Logged Out Clicked");
 
             }
         });
 
     }
-
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == 0) {
-            if(resultCode == LoginActivity.RESULT_OK){
-                String result_name =  data.getStringExtra("r_name");
-                result_user_id =  data.getStringExtra("r_id");
-                result_user_mail = data.getStringExtra("r_mail");
-                //showToast("DONO É: "+ result);
-                txUsername.setText(""+result_name);
-            }
-            if (resultCode == LoginActivity.RESULT_CANCELED) {
-                //Write your code if there's no result
-            }
-        }
-    }//onActivityResult
-
 
     private void showToast(String message){
 
@@ -190,9 +166,6 @@ public class MainActivity extends AppCompatActivity implements LifecycleObserver
         Log.d("MyApp", "App in foreground");
      //   wakeupApp();
     }
-
-
-
 
     private void wakeupApp(){
 

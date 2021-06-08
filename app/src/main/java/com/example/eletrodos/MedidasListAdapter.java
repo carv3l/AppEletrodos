@@ -2,6 +2,7 @@ package com.example.eletrodos;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.os.Bundle;
 
@@ -56,7 +57,7 @@ public class MedidasListAdapter extends AppCompatActivity {
 
     public boolean connStatus = true;
 
-    private Context mContext;
+    SharedPreferences sp;
     SwipeRefreshLayout swipeRefreshLayout;
 
     MedidasRecyclerAdapter adapter;
@@ -72,9 +73,9 @@ public class MedidasListAdapter extends AppCompatActivity {
     protected void onResume() {
 
         Handler h =new Handler() ;
-        Intent intent = getIntent();
-        g_id = intent.getStringExtra("user_id");
-        g_mail = intent.getStringExtra("user_mail");
+
+        g_id = sp.getString("user_id","0");
+        g_mail = sp.getString("user_email","0");
 
         loadData(g_id);
 
@@ -95,6 +96,7 @@ public class MedidasListAdapter extends AppCompatActivity {
         }, 2000);
 
         super.onResume();
+
     }
 
 
@@ -103,6 +105,9 @@ public class MedidasListAdapter extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_adapter);
+        showSnackIntro();
+
+        sp = getSharedPreferences("login",MODE_PRIVATE);
 
         recyclerView = findViewById(R.id.recyclerView);
         swipeRefreshLayout = findViewById(R.id.swipeRefreshLayoutMedidas);
@@ -319,6 +324,22 @@ public class MedidasListAdapter extends AppCompatActivity {
 
     }
 
+    private void showSnackIntro(){
+
+            final Snackbar snackBar = Snackbar.make(findViewById(android.R.id.content), "Apagar, deslizar para a esquerda \nLongo Clique para associar expedição", Snackbar.LENGTH_INDEFINITE);
+
+            snackBar.setAction("Ok", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Call your action method here
+                    snackBar.dismiss();
+                }
+            });
+            snackBar.show();
+
+
+    }
+
     public void sync(String mail) {
 
 
@@ -428,40 +449,19 @@ public class MedidasListAdapter extends AppCompatActivity {
                     mRMedido.remove(position);
                     mResultado.remove(position);
                     mNotas.remove(position);
-              //      mCoordenadas.remove(position);
-              //      mIduser.remove(position);
-              //      mId.remove(position);
 
                     deleteMedida(id_to_delete); //Apagar no mongoDB
 
                     adapter.notifyItemRemoved(position);
                     recyclerView.removeViewAt(position);
 
-
                     break;
                 case ItemTouchHelper.RIGHT: //SWIPE DA DIREITA PARA A ESQUERDA   --- EDITAR
 
-            /*
-                    ArrayList<String> mDados = new ArrayList<>();
-                    mDados.add(mId.get(position));
-                    mDados.add(mNome.get(position));
-                    mDados.add(mData.get(position));
-                    mDados.add(mNotas.get(position));
-                    mDados.add(mCoordenadas.get(position));
-                    mDados.add(mIduser.get(position));
-
-                    adapter.notifyItemChanged(position);
-
-                    Intent myIntent = new Intent(ExpeditionsListAdapter.this, EditExpedition.class);
-                    myIntent.putExtra("expedition_data", mDados); //Optional parameters
-                    ExpeditionsListAdapter.this.startActivity(myIntent);
-                    finish();
-*/
                     break;
 
             }
 
-            //  adapter.notifyItemChanged(position);
         }
 
         @Override

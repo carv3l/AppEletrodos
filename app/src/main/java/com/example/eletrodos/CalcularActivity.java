@@ -3,6 +3,7 @@ package com.example.eletrodos;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import com.android.volley.NetworkError;
@@ -70,6 +71,8 @@ public class CalcularActivity extends AppCompatActivity {
     CardView cardViewresult;
     LinearLayout mainLayout;
 
+    SharedPreferences sp;
+
     TextView TextViewResult;
 
     HashMap<String, String> params = new HashMap<String, String>();
@@ -81,6 +84,8 @@ public class CalcularActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calcular);
+
+        sp = getSharedPreferences("login",MODE_PRIVATE);
 
         calculate = findViewById(R.id.calculateButton);
         saveButton = findViewById(R.id.SaveButton);
@@ -95,8 +100,7 @@ public class CalcularActivity extends AppCompatActivity {
         notas = (EditText)findViewById(R.id.EditTextNotas);
 
 
-        Intent intent = getIntent();
-        String user_id = intent.getStringExtra("user_id");
+        String user_id = sp.getString("user_id","0");
         builder = new AlertDialog.Builder(this);
 
 

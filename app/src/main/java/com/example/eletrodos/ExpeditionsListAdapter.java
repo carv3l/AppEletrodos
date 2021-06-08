@@ -1,6 +1,7 @@
 package com.example.eletrodos;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.os.Bundle;
 import android.util.Log;
@@ -33,6 +34,8 @@ import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 
 public class ExpeditionsListAdapter extends AppCompatActivity {
 
+    SharedPreferences sp;
+
     RecyclerView recyclerView;
     ExpeditionRecyclerAdapter adapter;
     String id = "0";
@@ -55,21 +58,20 @@ public class ExpeditionsListAdapter extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_adapter);
 
-        //showToast("Para Editar: Deslizar para a Direita");
-        //showToast("Para Apagar: Deslizar para a Esquerda");
 
-        showSnack("Noda");
 
-        Intent intent = getIntent();
-        id = intent.getStringExtra("user_id");
-    //    Toast.makeText(MedidasListAdapter.this, "Id"+id, Toast.LENGTH_LONG).show();
+        sp = getSharedPreferences("login",MODE_PRIVATE);
+
+        showSnack();
+
+        id = sp.getString("user_id","0");
+
+
         RequestQueue queue = Volley.newRequestQueue(this);
 
 
         HashMap<String, String> params = new HashMap<String, String>();
-        //     params.put("id_user",id); //Add the data you'd like to send to the server.
-        //    params.put("espacamento", ""+0);
-        //    params.put("r_solo", ""+0);
+
 
         JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, uri_get_expedicao+"/0/"+ id, new JSONObject(params),new Response.Listener<JSONObject>() {
             @Override
@@ -95,9 +97,6 @@ public class ExpeditionsListAdapter extends AppCompatActivity {
                             mIduser.add(jObject.getString("id_user"));
 
 
-                            //  Log.v("ResponseList","nota"+ jObject.getString("nota"));
-                            //  Log.v("ResponseList","medido"+ jObject.getString("r_medido"));
-                            //  Log.v("ResponseList","resultado"+ jObject.getString("r_solo"));
 
                         }
                         initRecyclerView();
@@ -117,7 +116,6 @@ public class ExpeditionsListAdapter extends AppCompatActivity {
         }
         );
         queue.add(getRequest);
-        //  Log.d("List","onCreate: Started");
 
     }
 
@@ -251,7 +249,7 @@ public class ExpeditionsListAdapter extends AppCompatActivity {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 
-    private void showSnack(String message){
+    private void showSnack(){
 
         final Snackbar snackBar = Snackbar.make(findViewById(android.R.id.content), "Editar, deslizar para a direita.\nApagar, para a esquerda", Snackbar.LENGTH_INDEFINITE);
 
