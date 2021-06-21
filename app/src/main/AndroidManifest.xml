@@ -14,9 +14,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Eletrodos">
         <activity
+            android:name=".GraficoActivity"
+            android:label="@string/title_activity_grafico"
+            android:theme="@style/Theme.Eletrodos.NoActionBar"></activity>
+        <activity
             android:name=".SelectExpedition"
             android:label="@string/title_activity_select_expedition"
-            android:theme="@style/Theme.Eletrodos.NoActionBar"></activity>
+            android:theme="@style/Theme.Eletrodos.NoActionBar" />
         <activity
             android:name=".CriarExpedition"
             android:label="@string/title_activity_criar_expedition"

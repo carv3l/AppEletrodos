@@ -27,7 +27,6 @@ import java.util.HashMap;
 
 public class LoginActivity extends AppCompatActivity {
 
-    String serverApi ="https://eletrodos.herokuapp.com/api/calculate";
     String uri_post_login ="https://eletrodos.herokuapp.com/api/users";
 
     Button login ;

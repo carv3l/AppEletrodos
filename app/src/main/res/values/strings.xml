@@ -25,4 +25,5 @@
     <string name="title_activity_edit_expedition">EditExpedition</string>
     <string name="title_activity_criar_expedition">CriarExpedition</string>
     <string name="title_activity_select_expedition">SelectExpedition</string>
+    <string name="title_activity_grafico">GraficoActivity</string>
 </resources>

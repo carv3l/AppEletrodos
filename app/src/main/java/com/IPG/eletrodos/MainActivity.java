@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity implements LifecycleObserver
     CardView cardMedidas;
     CardView cardLogin;
     CardView cardExpeditions;
-    CardView cardSettings;
+    CardView cardGrafico;
     CardView cardLogout;
     TextView txUsername;
 
@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements LifecycleObserver
         cardMedidas = findViewById(R.id.cardMedidas);
         cardLogin = findViewById(R.id.cardLogin);
         cardExpeditions = findViewById(R.id.cardExpeditions);
-        cardSettings = findViewById(R.id.cardSettings);
+        cardGrafico = findViewById(R.id.cardGrafico);
         cardLogout = findViewById(R.id.cardLogout);
         txUsername = (TextView)findViewById(R.id.textViewUserName);
 
@@ -124,11 +124,11 @@ public class MainActivity extends AppCompatActivity implements LifecycleObserver
 
             }
         });
-        cardSettings.setOnClickListener(new View.OnClickListener() {
+        cardGrafico.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showToast("Settings Clicked");
-
+                Intent myIntent = new Intent(MainActivity.this, GraficoActivity.class);
+                MainActivity.this.startActivity(myIntent);
             }
         });
 
@@ -278,8 +278,8 @@ public class MainActivity extends AppCompatActivity implements LifecycleObserver
             cardExpeditions.setEnabled(false);
             cardExpeditions.setCardBackgroundColor(getColor(R.color.LightGray));
 
-            cardSettings.setEnabled(false);
-            cardSettings.setCardBackgroundColor(getColor(R.color.LightGray));
+            cardGrafico.setEnabled(false);
+            cardGrafico.setCardBackgroundColor(getColor(R.color.LightGray));
 
             cardLogout.setEnabled(false);
             cardLogout.setCardBackgroundColor(getColor(R.color.LightGray));
@@ -296,8 +296,8 @@ public class MainActivity extends AppCompatActivity implements LifecycleObserver
             cardExpeditions.setEnabled(true);
             cardExpeditions.setCardBackgroundColor(getColor(R.color.white));
 
-            cardSettings.setEnabled(true);
-            cardSettings.setCardBackgroundColor(getColor(R.color.white));
+            cardGrafico.setEnabled(true);
+            cardGrafico.setCardBackgroundColor(getColor(R.color.white));
 
             cardLogout.setEnabled(true);
             cardLogout.setCardBackgroundColor(getColor(R.color.white));
