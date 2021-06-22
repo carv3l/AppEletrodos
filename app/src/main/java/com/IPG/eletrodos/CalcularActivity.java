@@ -157,8 +157,8 @@ public class CalcularActivity extends AppCompatActivity {
 
                try {
 
-                   Toast.makeText(CalcularActivity.this, response.getJSONObject("message").toString(), Toast.LENGTH_LONG).show();
-                  // Toast.makeText(CalcularActivity.this, "Medida Guardada com Sucesso!!!", Toast.LENGTH_LONG).show();
+                   Toast.makeText(CalcularActivity.this, ""+response.getString("message"), Toast.LENGTH_LONG).show();
+                   // Toast.makeText(CalcularActivity.this, "Medida Guardada com Sucesso!!!", Toast.LENGTH_LONG).show();
 
                    ClearFields();
 
