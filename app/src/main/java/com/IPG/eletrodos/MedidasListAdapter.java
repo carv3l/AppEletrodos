@@ -58,10 +58,10 @@ public class MedidasListAdapter extends AppCompatActivity {
     MedidasRecyclerAdapter adapter;
     RecyclerView recyclerView;
 
-    private ArrayList<String> mNotas = new ArrayList<>();
-    private ArrayList<String> mRMedido= new ArrayList<>();
-    private ArrayList<String> mResultado = new ArrayList<>();
-    private ArrayList<String> mId_Medida = new ArrayList<>();
+    private final ArrayList<String> mNotas = new ArrayList<>();
+    private final ArrayList<String> mRMedido= new ArrayList<>();
+    private final ArrayList<String> mResultado = new ArrayList<>();
+    private final ArrayList<String> mId_Medida = new ArrayList<>();
 
 
     @Override
@@ -142,7 +142,7 @@ public class MedidasListAdapter extends AppCompatActivity {
         //    params.put("espacamento", ""+0);
         //    params.put("r_solo", ""+0);
 
-        JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, uri_get_medidas+"/"+id+"/0/0", new JSONObject(params),new Response.Listener<JSONObject>() {
+        JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, uri_get_medidas+"/"+id, new JSONObject(params),new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response){
                 try {
@@ -269,10 +269,7 @@ public class MedidasListAdapter extends AppCompatActivity {
 
         String filename= getFilesDir()+"/temp.json";
         File f = new File(filename);
-        if(f.exists() && !f.isDirectory()) {
-            return true;
-        }else
-            return false;
+        return f.exists() && !f.isDirectory();
     }
 
     public boolean mailtoid(String mail) {
