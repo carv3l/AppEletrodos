@@ -137,6 +137,9 @@ public class FirstFragment extends Fragment implements OnChartValueSelectedListe
         xAxis.setTextColor(Color.BLACK);
         xAxis.setDrawGridLines(false);
         xAxis.setDrawAxisLine(false);
+        xAxis.setCenterAxisLabels(false);
+        xAxis.setGranularity(1f);
+
 
         leftAxis = lineChart.getAxisLeft();
 
@@ -202,11 +205,6 @@ public class FirstFragment extends Fragment implements OnChartValueSelectedListe
             }
         }
 
-
-      //  Log.i("SIZE",""+max);
-     //  Log.i("MESSAGE","ARRAY"+values1);
-
-
         leftAxis.setAxisMaximum(max+20); //20 de threshold (margem) para não ficar no limite do gráfico
 
 
@@ -267,18 +265,12 @@ public class FirstFragment extends Fragment implements OnChartValueSelectedListe
 
 
         try {
-            des.setText("Nota: "+mNotas.get(index)+" \n Resistividade:"+mResultado.get(index));
+            des.setText("Nota: "+mNotas.get(index)+" \n Resistividade: "+mResultado.get(index));
         }
         catch (Exception ex){
 
             Log.e("ERRO", ""+ex);
         }
-
-        Log.v("ResponseList","Response"+h);
-        //des.setText("Nota: "+mNotas.get(index)+" \n Resistividade:"+mResultado.get(index));
-
-        //des.setText("Nota: "+index);
-
     }
 
     @Override

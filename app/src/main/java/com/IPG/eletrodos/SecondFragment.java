@@ -135,6 +135,8 @@ public class SecondFragment extends Fragment implements OnChartValueSelectedList
         xAxis.setTextColor(Color.BLACK);
         xAxis.setDrawGridLines(false);
         xAxis.setDrawAxisLine(false);
+        xAxis.setCenterAxisLabels(false);
+        xAxis.setGranularity(1f); //Numeros Inteiros
 
         leftAxis = lineChart.getAxisLeft();
 
@@ -192,7 +194,16 @@ public class SecondFragment extends Fragment implements OnChartValueSelectedList
         }
 
 
+        //Ciclo para determinar o valor minimo do array para definir no Y axis
+        float min = 0;
+        for(int i=0; i< mdesvio.size(); i++ ) {
+            if(mdesvio.get(i)<min) {
+                min = mdesvio.get(i);
+            }
+        }
+
         leftAxis.setAxisMaximum(max+50); //50 de threshold (margem) para não ficar no limite do gráfico
+        leftAxis.setAxisMinimum(min+20); //20 de threshold (margem) para não ficar no limite do gráfico
 
 
         if (lineChart.getData() != null && lineChart.getData().getDataSetCount() > 0) {
@@ -242,17 +253,13 @@ public class SecondFragment extends Fragment implements OnChartValueSelectedList
 
 
         try {
-            des.setText("Nota: "+mNotas.get(index)+" \n Resistividade:"+mResultado.get(index));
+            des.setText("Nota: "+mNotas.get(index)+" \n Desvio: "+mdesvio.get(index)+ " %");
         }
         catch (Exception ex){
 
             Log.e("ERRO", ""+ex);
         }
 
-        Log.v("ResponseList","Response"+h);
-        //des.setText("Nota: "+mNotas.get(index)+" \n Resistividade:"+mResultado.get(index));
-
-        //des.setText("Nota: "+index);
 
     }
 
