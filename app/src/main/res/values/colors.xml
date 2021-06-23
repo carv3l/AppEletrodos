@@ -11,13 +11,6 @@
     <color name="Yellow">#FFC300</color>
     <color name="LightGray">#D3D3D3</color>
     <color name="SelectGray">#808080</color>
-
-
-
-
-
-
-
-
+    <color name="LightDarkGray">#606060</color>
 
 </resources>
