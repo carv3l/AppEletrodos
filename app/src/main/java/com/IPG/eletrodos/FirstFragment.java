@@ -44,6 +44,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 
 public class FirstFragment extends Fragment implements OnChartValueSelectedListener {
@@ -177,14 +179,17 @@ public class FirstFragment extends Fragment implements OnChartValueSelectedListe
 
         Log.i("ESPACAMENTO","ARRAY ESP: "+mEspacamento);
 
+
+        Collections.sort(mEspacamento); //Ordenar o Array
+
+      //  Log.i("ESP","ESP"+mEspacamento);
+
         //Dataset Medidas
         for (int i = 0; i < mEspacamento.size(); i++) {
             values1.add(new Entry(Float.parseFloat(mEspacamento.get(i)), Float.parseFloat(mResultado.get(i))));
         }
 
         //Determinar a média para passar para dataset
-
-
         float somamedia= 0;
 
         for(int i=0; i< mResultado.size(); i++ ) {
@@ -192,7 +197,7 @@ public class FirstFragment extends Fragment implements OnChartValueSelectedListe
         }
         float media = Math.round((somamedia/mResultado.size()) *100 ) /100;
 
-        for (int i=0; i< mResultado.size(); i++ ){
+        for (int i=0; i< mEspacamento.size(); i++ ){
             valuesAverage.add(new Entry(Float.parseFloat(mEspacamento.get(i)),media));
         }
 
@@ -280,7 +285,7 @@ public class FirstFragment extends Fragment implements OnChartValueSelectedListe
 
 
     public void getdata(){
-
+        String id = "";
 
         String uri_get_medidas ="https://eletrodos.herokuapp.com/api/medidas";
 
@@ -290,7 +295,14 @@ public class FirstFragment extends Fragment implements OnChartValueSelectedListe
         HashMap<String, String> params = new HashMap<String, String>();
 
 
-        JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, uri_get_medidas+"/"+ sp.getString("user_id","0"), new JSONObject(params),new Response.Listener<JSONObject>() {
+        if (sp.getBoolean("graph",false)) {
+          //  Toast.makeText(mContext, "Response ", Toast.LENGTH_LONG).show();
+            id = sp.getString("expedition_id", "0");
+        }else
+            id = sp.getString("user_id","0");
+
+
+        JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, uri_get_medidas+"/"+ id, new JSONObject(params),new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response){
                 try {

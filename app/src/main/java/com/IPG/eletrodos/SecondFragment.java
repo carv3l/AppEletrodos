@@ -37,6 +37,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 
 public class SecondFragment extends Fragment implements OnChartValueSelectedListener {
@@ -163,7 +164,10 @@ public class SecondFragment extends Fragment implements OnChartValueSelectedList
 
         LineDataSet setDesvio;
 
-        Log.i("ESPACAMENTO","ARRAY ESP: "+mEspacamento);
+        Collections.sort(mEspacamento); //Ordenar o Array
+
+
+        //  Log.i("ESPACAMENTO","ARRAY ESP: "+mEspacamento);
 
 
         //Determinar a média para passar para dataset
@@ -203,7 +207,7 @@ public class SecondFragment extends Fragment implements OnChartValueSelectedList
         }
 
         leftAxis.setAxisMaximum(max+50); //50 de threshold (margem) para não ficar no limite do gráfico
-        leftAxis.setAxisMinimum(min+20); //20 de threshold (margem) para não ficar no limite do gráfico
+        leftAxis.setAxisMinimum(min-20); //20 de threshold (margem) para não ficar no limite do gráfico
 
 
         if (lineChart.getData() != null && lineChart.getData().getDataSetCount() > 0) {
@@ -269,6 +273,13 @@ public class SecondFragment extends Fragment implements OnChartValueSelectedList
     }
 
     public void getdata(){
+        String id = "";
+        if (sp.getBoolean("graph",false)) {
+
+            id = sp.getString("expedition_id", "0");
+            Log.d("SF" ,"Expedtid"+id);
+        }else
+            id = sp.getString("user_id","0");
 
 
         String uri_get_medidas ="https://eletrodos.herokuapp.com/api/medidas";
@@ -279,7 +290,7 @@ public class SecondFragment extends Fragment implements OnChartValueSelectedList
         HashMap<String, String> params = new HashMap<String, String>();
 
 
-        JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, uri_get_medidas+"/"+ sp.getString("user_id","0"), new JSONObject(params),new Response.Listener<JSONObject>() {
+        JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, uri_get_medidas+"/"+ id, new JSONObject(params),new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response){
                 try {
