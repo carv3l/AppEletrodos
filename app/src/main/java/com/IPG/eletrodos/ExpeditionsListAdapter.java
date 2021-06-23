@@ -45,12 +45,12 @@ public class ExpeditionsListAdapter extends AppCompatActivity {
 
     String uri_get_expedicao ="https://eletrodos.herokuapp.com/api/expeditions";
 
-    private ArrayList<String> mId = new ArrayList<>();
-    private ArrayList<String> mNome = new ArrayList<>();
-    private ArrayList<String> mData= new ArrayList<>();
-    private ArrayList<String> mNotas= new ArrayList<>();
-    private ArrayList<String> mCoordenadas= new ArrayList<>();
-    private ArrayList<String> mIduser = new ArrayList<>();
+    private final ArrayList<String> mId = new ArrayList<>();
+    private final ArrayList<String> mNome = new ArrayList<>();
+    private final ArrayList<String> mData= new ArrayList<>();
+    private final ArrayList<String> mNotas= new ArrayList<>();
+    private final ArrayList<String> mCoordenadas= new ArrayList<>();
+    private final ArrayList<String> mIduser = new ArrayList<>();
 
 
 
@@ -202,7 +202,7 @@ public class ExpeditionsListAdapter extends AppCompatActivity {
 
     private void initRecyclerView(){
         recyclerView = findViewById(R.id.recyclerView);
-        adapter = new ExpeditionRecyclerAdapter(this,mNome,mData,mNotas);
+        adapter = new ExpeditionRecyclerAdapter(this,mNome,mData,mNotas,mId,recyclerView);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -253,7 +253,7 @@ public class ExpeditionsListAdapter extends AppCompatActivity {
 
     private void showSnack(){
 
-        final Snackbar snackBar = Snackbar.make(findViewById(android.R.id.content), "Editar, deslizar para a direita.\nApagar, para a esquerda", Snackbar.LENGTH_INDEFINITE);
+        final Snackbar snackBar = Snackbar.make(findViewById(android.R.id.content), "Editar, deslizar para a direita.\nApagar, para a esquerda.\n Longo clique para carregar em Gráfico", Snackbar.LENGTH_INDEFINITE);
 
         snackBar.setAction("Entendido", new View.OnClickListener() {
             @Override
@@ -262,6 +262,12 @@ public class ExpeditionsListAdapter extends AppCompatActivity {
                 snackBar.dismiss();
             }
         });
+
+        //Altura do SnackBar
+      //  Snackbar.SnackbarLayout layout = (Snackbar.SnackbarLayout)snackBar.getView();
+      //  layout.setMinimumHeight(1000);//your custom height.
+
+
         snackBar.show();
 
     }

@@ -1,5 +1,6 @@
 package com.IPG.eletrodos;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -23,12 +24,15 @@ public class GraficoActivity extends AppCompatActivity {
     TabLayout tabLayout;
     ViewPager2 pager2;
     FragmentAdapter adapter;
+    SharedPreferences sp;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_grafico);
+
+        sp = getSharedPreferences("login", MODE_PRIVATE);
 
 
         tabLayout = findViewById(R.id.tab_layout);
@@ -68,4 +72,11 @@ public class GraficoActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onBackPressed() {
+
+        sp.edit().putBoolean("graph",false).apply(); //Colocar um boolean para no grafico carregar a partir da exped
+
+        super.onBackPressed();
+    }
 }

@@ -1,16 +1,19 @@
 package com.IPG.eletrodos;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 
@@ -20,21 +23,37 @@ public class ExpeditionRecyclerAdapter extends RecyclerView.Adapter<ExpeditionRe
     private ArrayList<String> mNome = new ArrayList<>();
     private ArrayList<String> mData= new ArrayList<>();
     private ArrayList<String> mNotas = new ArrayList<>();
-    private Context mContext;
+    private ArrayList<String> expeditionId = new ArrayList<>();
+    private final Context mContext;
+    boolean isSelectMode = false;
+    int previous_holder = 0;
+    private final ArrayList<String> selectedItems = new ArrayList<>();
+    String selectedLoadEx = "";
+    SharedPreferences sp;
+    RecyclerView recyclerView;
 
-    public ExpeditionRecyclerAdapter(Context context , ArrayList<String> mNome, ArrayList<String> mData, ArrayList<String> mNotas) {
+
+    View view;
+    Snackbar snackbar;
+
+
+    public ExpeditionRecyclerAdapter(Context context , ArrayList<String> mNome, ArrayList<String> mData, ArrayList<String> mNotas,ArrayList<String> mIdExpeditions,RecyclerView rcview) {
 
         this.mNome = mNome;
         this.mData = mData;
         this.mNotas = mNotas;
+        this.expeditionId = mIdExpeditions;
         this.mContext = context;
+        this.recyclerView = rcview;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_listitem,parent, false);
+        view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_listitem,parent, false);
         ViewHolder holder = new ViewHolder(view);
+
+        sp = mContext.getSharedPreferences("login", Context.MODE_PRIVATE);
         return holder;
     }
 
@@ -51,11 +70,63 @@ public class ExpeditionRecyclerAdapter extends RecyclerView.Adapter<ExpeditionRe
         holder.linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("RecyclerAdapter","onClick: called"+mNotas.get(position));
+             //   Log.d("RecyclerAdapter","onClick: called"+mNotas.get(position));
 
-                Toast.makeText(mContext,mNotas.get(position), Toast.LENGTH_SHORT).show();
+               // Toast.makeText(mContext,mNotas.get(position), Toast.LENGTH_SHORT).show();
             }
         });
+
+        holder.linearLayout.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                //  Toast.makeText(mContext,"Long Click" , Toast.LENGTH_SHORT).show();
+                isSelectMode = true;
+
+
+              //  if (selectedItems.contains(expeditionId.get(holder.getAdapterPosition()))){
+                //    holder.linearLayout.setBackgroundResource(R.color.white);
+                //    selectedItems.remove(expeditionId.get(holder.getAdapterPosition()));
+              //  }else {
+
+
+try {
+                    ViewHolder oldh = (ViewHolder) recyclerView.findViewHolderForAdapterPosition(previous_holder);
+
+                    oldh.linearLayout.setBackgroundResource(R.color.white);
+
+                }catch (Exception e){
+
+
+}
+
+
+                    holder.linearLayout.setBackgroundResource(R.color.LightGray);
+                    //selectedItems.add(expeditionId.get(holder.getAdapterPosition()));
+
+                    selectedLoadEx = expeditionId.get(holder.getAdapterPosition());
+
+                    previous_holder = holder.getAdapterPosition();
+
+
+                 //   selectedItems.remove(expeditionId.get(holder.getAdapterPosition()-1));
+
+           //     }
+
+                    //showSnack("Selecionado "+selectedLoadEx+" medida");
+
+                    showSnack(mNome.get(holder.getAdapterPosition())+" Selecionado");
+
+
+
+                if (selectedItems.size() == 0)
+                    isSelectMode = false;
+
+                return true;
+            }
+        });
+
+
+
     }
 
     @Override
@@ -79,6 +150,33 @@ public class ExpeditionRecyclerAdapter extends RecyclerView.Adapter<ExpeditionRe
             linearLayout = (LinearLayout)itemView.findViewById(R.id.ParentLinearLayout);
         }
     }
+
+    private void showSnack(String message){
+
+        snackbar = Snackbar.make(view, ""+message+" para carregar", Snackbar.LENGTH_INDEFINITE);
+
+        //   snackbar.setText(""+message);
+
+        //  showToast(""+selectedItems);
+
+
+        snackbar.setAction("Carregar", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Call your action method here
+
+                sp.edit().putBoolean("graph",true).apply(); //Colocar um boolean para no grafico carregar a partir da exped
+                sp.edit().putString("expedition_id",selectedLoadEx).apply(); //Colocar um boolean para no grafico carregar a partir da exped
+
+                Intent myIntent = new Intent(mContext, GraficoActivity.class);
+              //  myIntent.putExtra("list_id_medidas", selectedItems); //Optional parameters
+                //myIntent.putExtra("user_id", user_id); //Optional parameters
+                mContext.startActivity(myIntent);
+                snackbar.dismiss();
+            } });
+        snackbar.show();
+    }
+
 
 
 }
