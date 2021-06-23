@@ -253,9 +253,9 @@ public class ExpeditionsListAdapter extends AppCompatActivity {
 
     private void showSnack(){
 
-        final Snackbar snackBar = Snackbar.make(findViewById(android.R.id.content), "Editar, deslizar para a direita.\nApagar, para a esquerda.\n Longo clique para carregar em Gráfico", Snackbar.LENGTH_INDEFINITE);
+        final Snackbar snackBar = Snackbar.make(findViewById(android.R.id.content), "Editar, deslizar para a direita.\nApagar, para a esquerda. Longo clique \n para carregar em Gráfico", Snackbar.LENGTH_INDEFINITE);
 
-        snackBar.setAction("Entendido", new View.OnClickListener() {
+        snackBar.setAction("Ok", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Call your action method here

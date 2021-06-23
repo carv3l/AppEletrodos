@@ -153,7 +153,7 @@ try {
 
     private void showSnack(String message){
 
-        snackbar = Snackbar.make(view, ""+message+" para carregar", Snackbar.LENGTH_INDEFINITE);
+        snackbar = Snackbar.make(view, ""+message+" para carregar em gráfico ", Snackbar.LENGTH_INDEFINITE);
 
         //   snackbar.setText(""+message);
 
