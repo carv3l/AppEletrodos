@@ -161,8 +161,14 @@ public class SecondFragment extends Fragment implements OnChartValueSelectedList
 
 
         ArrayList<Entry> values_desvio = new ArrayList<>();
+        ArrayList<Entry> valuesLimiteSup = new ArrayList<>();
+        ArrayList<Entry> valuesLimiteInf= new ArrayList<>();
+
 
         LineDataSet setDesvio;
+
+        LineDataSet setLimitSup;
+        LineDataSet setLimitInf;
 
         Collections.sort(mEspacamento); //Ordenar o Array
 
@@ -171,8 +177,6 @@ public class SecondFragment extends Fragment implements OnChartValueSelectedList
 
 
         //Determinar a média para passar para dataset
-
-
         float somamedia= 0;
 
         for(int i=0; i< mResultado.size(); i++ ) {
@@ -206,6 +210,14 @@ public class SecondFragment extends Fragment implements OnChartValueSelectedList
             }
         }
 
+
+        for (int i=0; i< mdesvio.size(); i++ ){
+            valuesLimiteSup.add(new Entry(Float.parseFloat(mEspacamento.get(i)),15));
+            valuesLimiteInf.add(new Entry(Float.parseFloat(mEspacamento.get(i)), -15));
+        }
+
+
+
         leftAxis.setAxisMaximum(max+50); //50 de threshold (margem) para não ficar no limite do gráfico
         leftAxis.setAxisMinimum(min-20); //20 de threshold (margem) para não ficar no limite do gráfico
 
@@ -213,6 +225,15 @@ public class SecondFragment extends Fragment implements OnChartValueSelectedList
         if (lineChart.getData() != null && lineChart.getData().getDataSetCount() > 0) {
             setDesvio = (LineDataSet) lineChart.getData().getDataSetByIndex(0);
             setDesvio.setValues(values_desvio);
+
+
+            setLimitSup= (LineDataSet) lineChart.getData().getDataSetByIndex(1);
+            setLimitSup.setValues(valuesLimiteSup);
+
+            setLimitInf =  (LineDataSet) lineChart.getData().getDataSetByIndex(2);
+            setLimitInf.setValues(valuesLimiteInf);
+
+
 
 
             lineChart.getData().notifyDataChanged();
@@ -231,9 +252,26 @@ public class SecondFragment extends Fragment implements OnChartValueSelectedList
             setDesvio.setDrawCircleHole(false);
 
 
+            setLimitSup = new LineDataSet(valuesLimiteSup, "Limites");
+            setLimitSup.setAxisDependency(YAxis.AxisDependency.LEFT);
+            setLimitSup.setColor(Color.RED);
+            setLimitSup.setLineWidth(3f);
+            setLimitSup.setFillAlpha(65);
+            setLimitSup.setFillColor(Color.RED);
+
+
+            setLimitInf= new LineDataSet(valuesLimiteInf, null);
+            setLimitInf.setAxisDependency(YAxis.AxisDependency.LEFT);
+            setLimitInf.setColor(Color.RED);
+            setLimitInf.setLineWidth(3f);
+            setLimitInf.setFillAlpha(65);
+            setLimitInf.setFillColor(Color.RED);
+
+
+
 
             // create a data object with the data sets
-            LineData data = new LineData(setDesvio);
+            LineData data = new LineData(setDesvio,setLimitSup,setLimitInf);
             data.setValueTextColor(Color.BLACK);
             data.setValueTextSize(9f);
 
